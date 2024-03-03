@@ -1,0 +1,20 @@
+{% extends 'poolservice/base.html' %}
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block body %}
+<div class="container">
+    <h1>{{title}}</h1>
+    <form action="{% url 'new_log' %}" method="post">
+        <div class="container">
+        {% csrf_token %} <!-- передается специальный ключ для защиты формы от подделки -->
+        <div class="col-6 col-md">{{form.non_field_errors}}</div>
+        {{ form.as_p }}  <!-- as_p() - Метод класса Forms для отображения всех полей через -->
+            <div class="container" align="right">
+                <button type="submit" class="btn btn-primary">Добавить</button>
+            </div>
+        </div><br>
+    </form>
+</div>
+{% endblock body %}

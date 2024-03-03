@@ -1,0 +1,67 @@
+{% extends 'poolservice/base.html' %}
+{% block title %}
+{{log.pool}} {{title}} {{log.time_create|date}}
+{% endblock title %}
+
+
+
+{% block body %}
+<div class="container">
+<h5> {{log.pool}}<br>{{log.time_create|date}}</h5>
+    {{log.title}}<br>
+    {% if log.PH %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Ph:</span>
+        <span class="badge bg-success-subtle text-success-emphasis rounded-pill">{{log.PH}}</span>
+    {% endif %}
+    {% if log.RX %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Redox:</span>
+        <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">{{log.RX}}</span>
+    {% endif %}
+    {% if log.CL %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Cl:</span>
+        <span class="badge bg-info-subtle text-info-emphasis rounded-pill">{{log.CL}}</span>
+    {% endif %}
+    {% if log.T %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Т°C:</span>
+        <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill">{{log.T}}</span>
+    {% endif %}<br>
+    {% if log.water_cond %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Состояние воды:</span><br>
+        <li>{{log.water_cond}}</li>
+    {% endif %}
+    {% if log.reagents %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Добавлены реагенты:</span><br>
+        <li>{{log.reagents|linebreaksbr}}</li>
+    {% endif %}
+    {% if log.works %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Выполнены работы:</span><br>
+        <li>{{log.works|linebreaksbr}}</li>
+    {% endif %}
+    {% if log.comment %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Комментарий:</span><br>
+        <li>{{log.comment|linebreaksbr}}</li>
+    {% endif %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Изменено: {{log.date_update}}</span><br>
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Исполнитель:
+            {% if log.author.first_name %}
+            {{log.author.first_name.capitalize}} {{log.author.last_name.capitalize}}
+            {% else %}
+            {{log.author.username.capitalize}}
+            {% endif %}
+        </span><br>
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Все записи по объекту:</span>
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">
+            <a href="{% url 'pool_logs' log.pool_id %}"
+               class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">{{log.pool}}</a></span>
+                <br>
+                {% if 'log' not in request.META.HTTP_REFERER %}
+                <a onclick="javascript:history.back();" href="#" class="badge bg-primary-subtle border border-primary-subtle text-primary-emphasis rounded-pill">Назад</a>
+                {% else %}
+                <a  href="{% url 'home' %}" class="badge bg-primary-subtle border border-primary-subtle text-primary-emphasis rounded-pill">Назад</a>
+                {% endif %}
+                {% if request.user == log.author  or request.user.is_superuser %}
+                <a href="{% url 'update' log.id %}" class="badge bg-warning-subtle border border-warning-subtle text-warning-emphasis rounded-pill">Изменить</a>
+                <a href="{% url 'delete' log.id %}" class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill">Удалить</a>
+                {% endif %}
+</div><br>
+{% endblock body %}
