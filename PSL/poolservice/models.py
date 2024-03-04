@@ -56,7 +56,15 @@ class PoolService(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('log', kwargs={'log_id':self.pk})
+        return reverse('log', kwargs={'pk':self.pk})
+
+    def get_previous(self):
+        previos = PoolService.objects.filter(time_create__lt=self.time_create).order_by('-time_create').first()
+        return previos
+
+    def get_next(self):
+        next = PoolService.objects.filter(time_create__gt=self.time_create).order_by('-time_create').last()
+        return next
 
 
 """

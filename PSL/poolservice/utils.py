@@ -26,6 +26,7 @@ class DataMixin:
 
         context['menu'] = user_menu
         context['pools'] = pools
+        #context['queryset'] = queryset
 
         if 'pool_selected' not in context:
             context['pool_selected'] = 0

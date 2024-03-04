@@ -13,28 +13,8 @@ from .forms import *
 from .models import *
 from .utils import *
 
-# menu = [
-#         {'title':'Новый выезд', 'url_name':'new_log'},
-#         {'title':'Новый бассейн', 'url_name':'new_pool'},
-#         {'title':'Войти', 'url_name':'login'},
-#         ]
 
-
-class PoolServiceView(DataMixin, ListView):
-    paginate_by = 10
-    model = PoolService
-    template_name = 'poolservice/index.html'
-    context_object_name = 'logs'
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Главная страница')
-        return dict(list(context.items()) + list(c_def.items()))
-
-    def get_queryset(self):
-        return PoolService.objects.filter(is_published=True).select_related('pool')
-
-
+# Функция предстваления страницы index, аналогично классу представленному ниже
 # def index(request):
 #     logs = PoolService.objects.all().order_by('-date_create')
 #     pools = Pool.objects.all()
@@ -47,32 +27,21 @@ class PoolServiceView(DataMixin, ListView):
 #     }
 #     return render(request,'poolservice/index.html', context=context)
 
-@login_required # Для ограничения доступа используется специальный декоратор
-def about(request):
-    context = {
-        'menu': menu,
-        'title': 'О сайте',
-    }
-    return render(request,'poolservice/about.html', context=context)
 
-
-class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
-    # LoginRequiredMixin - добавляет новые свойства, данный класс теперь будет работать только с зарегистрированным пользователем
-    form_class = NewPoolLogForm
-    template_name = 'poolservice/new_log.html'
-    #success_url = reverse_lazy('home') # Путь перехода после заполнения формы, иначе работает get_absolute_url
-    login_url = reverse_lazy('login') # Сдесь нужно поменять путь когда будет работать страница авторизации
-    raise_exception = True # Ошибка 403 Доступ запрещен
+class PoolServiceView(DataMixin, ListView):
+    paginate_by = 10
+    model = PoolService
+    template_name = 'poolservice/index.html'
+    context_object_name = 'logs'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Новая запись')
+        context['queryset'] = self.get_queryset()
+        c_def = self.get_user_context(title='Главная страница')
         return dict(list(context.items()) + list(c_def.items()))
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.save()
-        return super().form_valid(form)
+    def get_queryset(self):
+        return PoolService.objects.filter(is_published=True).select_related('pool')
 
 
 # def new_log(request):
@@ -93,6 +62,28 @@ class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
 #     }
 #     return render(request, 'poolservice/new_log.html', context=context)
 
+
+class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
+    # LoginRequiredMixin - добавляет новые свойства, данный класс теперь будет работать
+    # только с зарегистрированным пользователем
+    form_class = NewPoolLogForm
+    template_name = 'poolservice/new_log.html'
+    # success_url = reverse_lazy('home') # Путь перехода после заполнения формы,
+    # иначе работает get_absolute_url
+    login_url = reverse_lazy('login') # Сдесь нужно поменять путь когда будет работать страница авторизации
+    raise_exception = True # Ошибка 403 Доступ запрещен
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Новая запись')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+
 @login_required
 def new_pool(request):
     if request.method == 'POST':
@@ -111,22 +102,6 @@ def new_pool(request):
         'title': 'Добавить новый бассейн',
     }
     return render(request, 'poolservice/new_pool.html', context=context)
-
-
-# def contact(request):
-#     return HttpResponse('Обратная связь')
-
-
-def admin_view(request):
-    return redirect('admin')
-
-
-def development(request):
-    context = {
-        'menu': menu,
-        'title': 'Разработка PoolService',
-    }
-    return render(request, 'poolservice/development.html', context=context)
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -163,22 +138,6 @@ def logout_user(request):
     return redirect('login')
 
 
-# def admin(request):
-#     return redirect('admin')
-
-
-@login_required
-def show_log(request, log_id):
-    log = get_object_or_404(PoolService, pk=log_id)
-
-    context = {
-        'log': log,
-        'title': log.title,
-        'menu': menu,
-    }
-    return render(request, 'poolservice/log.html', context=context)
-
-
 @login_required
 def update_log(request, log_id):
     log = PoolService.objects.get(pk=log_id)
@@ -186,7 +145,7 @@ def update_log(request, log_id):
     context = {
         'form': form,
         'log': log,
-        'title': 'Изменить ' + log.title,
+        'title': 'Изменить ' + str(log.title) + ' ' + str(log.pool) + ' ' + str(log.time_create.date()),
         'menu': menu,
     }
     if request.method == "POST":
@@ -206,26 +165,19 @@ def delete_log(request, log_id):
     return redirect('home')
 
 
-class PoolLogsView(LoginRequiredMixin, ListView):
-    # Оставил этот класс без использования DataMixin, чтобы наглядно видеть и понимать разницу
-    paginate_by = 5
-    model = PoolService
-    template_name = 'poolservice/index.html'
-    context_object_name = 'logs'
-    allow_empty = False # Исключает вывод ошибок если список выбора по объекту пустой
+# @login_required
+# def show_log(request, pk):
+#     log = get_object_or_404(PoolService, pk=pk)
+#
+#     context = {
+#         'pk_url_kwarg': pk,
+#         'log': log,
+#         'title': log.title,
+#         'menu': menu,
+#     }
+#     return render(request, 'poolservice/log.html', context=context)
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['menu'] = menu
-        context['title'] = 'Сервис ' + str(context['logs'][0].pool)
-        context['pool_selected'] = context['logs'][0].pool_id
-        return context
-
-    def get_queryset(self):
-        return PoolService.objects.filter(pool__id=self.kwargs['pool_id'],  is_published=True)
-
-
-# Функция представления для примера, аналогичная вышеописанному классу представления
+# Функция представления для примера, аналогичная нижеописанному классу представления
 # def pool_logs(request, pool_id):
 #     logs = PoolService.objects.filter(pool_id=pool_id).order_by('date_create')
 #     pools = Pool.objects.all()
@@ -237,6 +189,52 @@ class PoolLogsView(LoginRequiredMixin, ListView):
 #         'title': 'Главная страница',
 #     }
 #     return render(request, 'poolservice/index.html', context=context)
+
+
+class PoolLogsView(LoginRequiredMixin, ListView):
+    # Оставил этот класс без использования DataMixin, чтобы наглядно видеть и понимать разницу
+    paginate_by = 5
+    model = PoolService
+    template_name = 'poolservice/index.html'
+    context_object_name = 'logs'
+    allow_empty = False # Исключает вывод ошибок если список выбора по объекту пустой
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['queryset'] = self.get_queryset()
+        context['menu'] = menu
+        context['title'] = 'Сервис ' + str(context['logs'][0].pool)
+        context['pool_selected'] = context['logs'][0].pool_id
+        return context
+
+    def get_queryset(self):
+        return PoolService.objects.filter(pool__id=self.kwargs['pool_id'],  is_published=True)
+
+
+class LogView(LoginRequiredMixin, DataMixin, DetailView):
+    model = PoolService
+    template_name = 'poolservice/log.html'
+    context_object_name = 'log'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk_url_kwarg'] = 'pk'
+        context['menu'] = menu
+        context['object_list'] = PoolLogsView.queryset
+        context['title'] = str(context['log'].title)
+        return context
+
+
+# Функция представления для примера, аналогичная нижеописанному классу представления
+# def pool_show(request, pool_slug):
+#     pool = get_object_or_404(Pool, slug=pool_slug)
+#
+#     context = {
+#         'title': pool.title,
+#         'menu': menu,
+#         'pool': pool,
+#     }
+#     return render(request, 'poolservice/pool_show.html', context=context)
 
 
 class PoolView(DataMixin, DetailView):
@@ -264,19 +262,31 @@ class ContactFormView(DataMixin, FormView):
         print(form.cleaned_data)
         return redirect('home')
 
-# def pool_show(request, pool_slug):
-#     pool = get_object_or_404(Pool, slug=pool_slug)
-#
-#     context = {
-#         'title': pool.title,
-#         'menu': menu,
-#         'pool': pool,
-#     }
-#     return render(request, 'poolservice/pool_show.html', context=context)
+
+def admin_view(request):
+    return redirect('admin')
+
+
+def development(request):
+    context = {
+        'menu': menu,
+        'title': 'Разработка PoolService',
+    }
+    return render(request, 'poolservice/development.html', context=context)
+
+
+@login_required # Для ограничения доступа используется специальный декоратор
+def about(request):
+    context = {
+        'menu': menu,
+        'title': 'О сайте',
+    }
+    return render(request,'poolservice/about.html', context=context)
 
 
 def pages(request, page):
     return HttpResponse(f"<h1>Вывод по страницам</h1><p>{page}</p>")
+
 
 def archive(request, year):
     if int(year) > 2024:
@@ -284,6 +294,7 @@ def archive(request, year):
     elif int(year) < 1950:
         return redirect('home', permanent=True)
     return HttpResponse(f"<h1>Вывод по годам</h1><p>{year}</p>")
+
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound(f"<h1>Страница не найдена</h1>")
