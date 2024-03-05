@@ -6,7 +6,6 @@ from .views import *
 
 urlpatterns = [
     path('', PoolServiceView.as_view(), name='home'),
-    # path('admin/', admin, name='admin'),
     path('admin/', admin_view, name='admin'),
     path('about/', about, name='about'),
     path('development/', development, name='development'),
