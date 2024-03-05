@@ -158,7 +158,7 @@ def update_log(request, log_id):
     return render(request, 'poolservice/update.html', context=context)
 
 
-@login_required
+@login_required # Для ограничения доступа используется специальный декоратор
 def delete_log(request, log_id):
     log = PoolService.objects.get(pk=log_id)
     log.delete()
@@ -275,7 +275,6 @@ def development(request):
     return render(request, 'poolservice/development.html', context=context)
 
 
-@login_required # Для ограничения доступа используется специальный декоратор
 def about(request):
     context = {
         'menu': menu,
