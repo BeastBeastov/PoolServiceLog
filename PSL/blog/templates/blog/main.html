@@ -1,0 +1,34 @@
+{% extends 'blog/blog_base.html' %}
+{% load blogtags %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+
+{% block body %}
+<div class="container">
+{% for p in posts %}
+    <a href="{{p.get_absolute_url}}" class="link-secondary text-decoration-none">
+
+    <div class="row" style="{% color_sh p.status %}">
+        <div class="col-6">{{p.get_status_display}} От:{{p.author.username}}</div>
+        <div class="col-6" align="right"><small>Создано: {{p.time_create}}</small></div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">{{p.title}}</div>
+        <div class="col-6" align="right"><small>Изменено: {{p.time_update}}</small></div>
+    </div>
+    </a>
+    <div class="container">
+        {{p.content|linebreaks}}
+    </div>
+    <div class="container" align="right">
+        Ответов: {{p.get_answers|length}}
+    </div>
+{% endfor %}
+    <br>
+</div>
+<br>
+{% endblock body %}

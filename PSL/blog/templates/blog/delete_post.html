@@ -1,0 +1,20 @@
+{% extends 'blog/blog_base.html' %}
+{% load blogtags %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+
+{% block body %}
+<div class="container">
+{% with p=post %}
+    <h1>Удаление сообщения</h1>
+    <form action="" method="post">{% csrf_token %}
+      <p>Вы действительно хотите удалить "{{ p.title }}"?</p>
+      <input type="submit" class="btn btn-primary" value="Удалить" />
+    </form>
+{% endwith %}
+</div>
+<br>
+{% endblock body %}

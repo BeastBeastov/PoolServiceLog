@@ -1,0 +1,48 @@
+{% extends 'blog/blog_base.html' %}
+{% load blogtags %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+
+{% block body %}
+<div class="container">
+{% with p=post %}
+    <a href="{{p.get_absolute_url}}" class="link-secondary text-decoration-none">
+        {% autoescape off %}
+    <div class="row" style="{% color_sh p.status %}">
+        <div class="col-6">{{p.get_status_display}} От:{{p.author.username}}</div>
+        <div class="col-6" align="right"><small>Создано: {{p.time_create}}</small></div>
+    </div>
+        {% endautoescape %}
+    <div class="row">
+        <div class="col-6">{{p.title}}</div>
+        <div class="col-6" align="right"><small>Изменено: {{p.time_update}}</small></div>
+    </div>
+    </a>
+    <div class="container">
+        <p>{{p.content|linebreaks}}</p>
+    </div>
+    <div class="container">
+    {% for a in p.get_answers %}
+    <div class="row" style="background-color: #778899; color: #FFFFFF">
+        <div class="col-6">{{a.author}}</div>
+        <div class="col-6" align="right">Время:{{a.time_create}}</div>
+    </div>
+        <div>{{a.content|linebreaks}}</div>
+    {% endfor %}
+    </div>
+    <div class="container">
+    <a href="{% url 'blog' %}"><button type="submit" class="btn btn-primary">К списку</button></a>
+    {% if request.user == p.author or request.user.is_superuser or request.user.is_staff %}
+    <a href="{% url 'update_post' p.id %}"><button type="submit" class="btn btn-primary">Редактировать</button></a>
+    <a href="{% url 'delete_post' p.id %}"><button type="submit" class="btn btn-primary">Удалить</button></a>
+    <a href="{% url 'new_answer' p.id %}"><button type="submit" class="btn btn-primary">Ответить</button></a>
+    {% endif%}
+    </div>
+{% endwith %}
+</div>
+
+<br>
+{% endblock body %}

@@ -1,0 +1,25 @@
+{% extends 'blog/blog_base.html' %}
+{% block title %}
+{{title}}
+{% endblock title %}
+
+
+{% block body %}
+<div class="container">
+    <h1>{{title}}</h1>
+<form action="" method="post">
+    {% csrf_token %} <!-- передается специальный ключ для защиты формы от подделки -->
+    <div class="col-6 col-md">{{form.non_field_errors}}</div>
+    <!--{{ form.as_p }}   as_p() - Метод класса Forms для отображения всех полей через-->
+        <p>
+            Ответ на сообщение: {{ post }} <br>
+            <label class="nav-item" for="{{ form.content.id_for_label }}">{{form.content.label}}:</label><br>{{form.content}}
+        </p>
+        <div class="col-6 col-md">{{form.content.errors}}</div>
+    <div class="container" align="right">
+        <button type="submit" class="btn btn-primary">Ответить</button>
+    </div>
+</form>
+</div>
+<br>
+{% endblock body %}
