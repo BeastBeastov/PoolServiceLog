@@ -37,6 +37,7 @@ class PoolServiceView(DataMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['queryset'] = self.get_queryset()
+        context['menu'] = menu
         c_def = self.get_user_context(title='Главная страница')
         return dict(list(context.items()) + list(c_def.items()))
 
@@ -223,6 +224,7 @@ class LogView(LoginRequiredMixin, DataMixin, DetailView):
         context['object_list'] = PoolLogsView.queryset
         context['title'] = str(context['log'].title)
         return context
+
 
 
 # Функция представления для примера, аналогичная нижеописанному классу представления

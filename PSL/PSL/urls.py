@@ -24,6 +24,7 @@ from poolservice.views import *
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
     path('captcha/', include('captcha.urls')),
+    path('', include('blog.urls')),
     path('', include('poolservice.urls')),
 ]
 

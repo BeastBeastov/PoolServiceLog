@@ -5,11 +5,11 @@ import pandas as pd
 import numpy as np
 
 
-
 menu = [
          {'title':'Главная', 'url_name':'home'},
          {'title':'Добавить сервис', 'url_name':'new_log'},
          {'title':'Новый бассейн', 'url_name':'new_pool'},
+         {'title':'Разработка', 'url_name':'blog'},
          ]
 
 

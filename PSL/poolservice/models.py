@@ -67,6 +67,7 @@ class PoolService(models.Model):
         return next
 
 
+
 """
 class Reagent(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")

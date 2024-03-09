@@ -25,39 +25,54 @@
             crossorigin="anonymous">
     </script>
 </head>
-
 <body>
-<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-{% block mainmenu %}
-<nav class="navbar navbar-default">
-    <div class="container">
-        <div class="navbar-header">
-            <a href="#" class="navbar-brand">ЖУРНАЛ PH</a>
-        </div>
 
-        <div>
-            <ul class="nav">
-                {% if request.user.is_authenticated %}
-                {% for m in menu %}
-                <li class="nav-item"><a href="{% url m.url_name %}" class="nav-link"> {{m.title}} </a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div>
-            <ul class="nav">
-                <li class="nav-item active"><a href="#" class="nav-link"> {{user.username}}</a></li>
-                <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link"> Выйти </a></li>
-                {% else %}
-                <li class="nav-item"><a href="{% url 'register' %}" class="nav-link"> Регистрация </a></li>
-                <li class="nav-item"><a href="{% url 'login'%}" class="nav-link"> Войти </a></li>
-                {% endif %}
-            </ul>
-        </div>
+
+<header class="container border-bottom">
+<nav class="py-2 bg-body-tertiary border-bottom">
+    <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto">
+          {% if request.user.is_authenticated %}
+          {% for m in menu %}
+          <!-- Элементы меню отображаются в цикле из переменной menu которая передается в context и загружается из utils -->
+                <li class="nav-item"><a href="{% url m.url_name %}" class="nav-link link-body-emphasis px-2"> {{m.title}} </a></li>
+          {% endfor %}
+          {% endif %}
+      </ul>
+      <ul class="nav">
+        {% if request.user.is_authenticated %}
+          <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">{{user.username}}</a></li>
+          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link link-body-emphasis px-2">Выйти</a></li>
+        {% else %}
+          <li class="nav-item"><a href="{% url 'register' %}" class="nav-link link-body-emphasis px-2">Регистрация</a></li>
+          <li class="nav-item"><a href="{% url 'login' %}" class="nav-link link-body-emphasis px-2">Войти</a></li>
+        {% endif %}
+      </ul>
     </div>
 </nav>
 </header>
-{% endblock mainmenu %}
 
+
+<header class="container border-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-9" align="center">
+                <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
+                    <img src="http://poolskeeper.ru/wa-data/public/site/img/pklogot-1.png" height="50">
+                    <span class="fs-4">&ensp; Журнал PH &ensp;</span>
+                 </a>
+            </div>
+            <div class="col-3" align="right">
+                <form class="col-6 col-lg-auto mb-3 mb-lg-0" role="search" >
+                    <input type="search" class="form-control" placeholder="Поиск..." aria-label="Поиск">
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+{% block appmenu %}
+{% endblock appmenu %}
 
 {% block body %}
 {% endblock body %}
@@ -104,6 +119,7 @@
               <small class="d-block mb-3 text-body-secondary">© www.poolskeeper.ru 2024</small>
           </a>
       </div>
+{% block footermenu %}
       <div class="col-7 col-md">
         <h5>ServiceWorks</h5>
         <ul class="list-unstyled text-small">
@@ -124,12 +140,13 @@
         <h5>About</h5>
         <ul class="list-unstyled text-small">
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'about' %}">О проекте</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'development' %}">Разработка</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'blog' %}">Разработка</a></li>
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'contact' %}">Обратная связь</a></li>
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">User agreement</a></li>
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'admin' %}">Админ</a></li>
         </ul>
       </div>
+{% endblock footermenu %}
     </div>
   </footer>
 </body>
