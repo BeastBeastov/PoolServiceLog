@@ -2,6 +2,24 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
+from multiselectfield import MultiSelectField
+
+# WORK_CHOICES = (
+#     (1, 'Уборка бассейна ручным водным пылесосом'),
+#     (2, 'Промывка фильтра'),
+#     (3, 'Уборка бассейна роботом-пылесосом'),
+#     (4, 'Чистка стен щёткой'),
+#     (5, 'Долив свежей воды'),
+#     (6, 'Чистка ватерлинии'),
+# )
+WORK_CHOICES = (
+    ('Уборка бассейна ручным водным пылесосом', 'Уборка бассейна ручным водным пылесосом'),
+    ('Промывка фильтра', 'Промывка фильтра'),
+    ('Уборка бассейна роботом-пылесосом', 'Уборка бассейна роботом-пылесосом'),
+    ('Чистка стен щёткой', 'Чистка стен щёткой'),
+    ('Долив свежей воды', 'Долив свежей воды'),
+    ('Чистка ватерлинии', 'Чистка ватерлинии'),
+)
 
 class Pool(models.Model):
     title = models.CharField(max_length=255, verbose_name="Название", db_index=True)
@@ -40,7 +58,7 @@ class PoolService(models.Model):
     T = models.FloatField(max_length=4, verbose_name="Т°C", null=True, blank=True)
     water_cond = models.CharField(max_length=50, verbose_name="Состояние воды", blank=True)
     reagents = models.TextField(max_length=1000, verbose_name="Добавленные реагенты", blank=True)
-    works = models.TextField(max_length=1000, default=None, verbose_name="Выполненные работы", blank=True)
+    works = MultiSelectField(choices=WORK_CHOICES, blank=True, max_choices=6, max_length=1000, verbose_name="Выполненные работы")
     comment = models.TextField(max_length=1000, verbose_name="Свободный комментарий", blank=True)
     is_published = models.BooleanField(default=True, verbose_name="Опубликовано")
     author = models.ForeignKey(User, default=0, verbose_name='Исполнитель', on_delete=models.PROTECT)

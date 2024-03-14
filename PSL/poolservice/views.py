@@ -285,8 +285,9 @@ class LogView(LoginRequiredMixin, DataMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['pk_url_kwarg'] = 'pk'
         # context['works'] = context['log'].works
-        works_str = context['log'].works
-        context['works'] = works_str.strip("[]").replace("'", "").split(", ")
+        # works_str = context['log'].works
+        # context['works'] = works_str.strip("[]").replace("'", "").split(", ")
+        context['works'] = context['log'].works
         context['object_list'] = PoolLogsView.queryset
         context['title'] = str(context['log'].title)
         c_def = self.get_user_context(title='Авторизация')

@@ -4,8 +4,16 @@ from captcha.fields import CaptchaField
 
 from .utils import *
 
+# WORK_CHOICES = (
+#     (1, 'Уборка бассейна ручным водным пылесосом'),
+#     (2, 'Промывка фильтра'),
+#     (3, 'Уборка бассейна роботом-пылесосом'),
+#     (4, 'Чистка стен щёткой'),
+#     (5, 'Долив свежей воды'),
+#     (6, 'Чистка ватерлинии'),
+# )
+
 WORK_CHOICES = (
-    ('Ничего', 'Ничего'),
     ('Уборка бассейна ручным водным пылесосом', 'Уборка бассейна ручным водным пылесосом'),
     ('Промывка фильтра', 'Промывка фильтра'),
     ('Уборка бассейна роботом-пылесосом', 'Уборка бассейна роботом-пылесосом'),
@@ -19,13 +27,12 @@ class NewPoolLogForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['pool'].empty_label = "Объект не выбран"
-        self.fields['works'].empty_label = "Ничего"
         if user.is_staff:
             self.fields['pool'].queryset = Pool.objects.all()
         else:
             self.fields['pool'].queryset = Pool.objects.filter(author=user)
 
-    works = forms.MultipleChoiceField(label='Выполненые работы', widget=forms.CheckboxSelectMultiple(),
+    works = forms.MultipleChoiceField(label='Выполненые работы', required=False, widget=forms.CheckboxSelectMultiple(),
                                           choices=WORK_CHOICES)
 
     class Meta:
