@@ -29,7 +29,10 @@
     <p><span class="badge bg-light-subtle text-light-emphasis rounded-pill">Год постройки:</span>
         <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{pool.year_create}} г.</span><br></p>
     {% endif %}
-
+    {% if pool.owner %}
+    <p><span class="badge bg-light-subtle text-light-emphasis rounded-pill">Контакты:</span><br>
+            {{pool.owner}}</p>
+    {% endif %}
             {% if pool.phone %}
             <p>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
@@ -48,5 +51,17 @@
               </p>
             </a>
             {% endif %}
+    {% if 'new_log' in request.META.HTTP_REFERER %}
+                <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill"><a href="{% url 'home' %}" class="nav-link">Назад</a></span>
+                {% elif 'pool_logs' in request.META.HTTP_REFERER %}
+                <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill"><a onclick="javascript:history.back();" href="#"  class="nav-link">Назад</a></span>
+                {% else %}
+                <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill"><a  href="{% url 'home' %}" class="nav-link">Назад</a></span>
+    {% endif %}
+    {% if request.user == pool.author  or request.user.is_superuser %}
+                <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill"><a href="{% url 'pool_update' pool.slug %}" class="nav-link">Изменить</a></span>
+                <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill"><a href="{% url 'pool_delete' pool.id %}" class="nav-link">Удалить</a></span>
+    {% endif %}
 </div>
+
 {% endblock body %}

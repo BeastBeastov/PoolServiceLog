@@ -9,6 +9,7 @@ menu = [
          {'title':'Главная', 'url_name':'home'},
          ]
 
+
 class DataMixinForm:
     def __init__(self, *args, **kwargs):
         """

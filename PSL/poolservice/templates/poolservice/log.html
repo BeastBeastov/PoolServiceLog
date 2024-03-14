@@ -35,7 +35,9 @@
     {% endif %}
     {% if log.works %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Выполнены работы:</span><br>
-        <li>{{log.works|linebreaksbr}}</li>
+        {% for work in works %}
+        <li>{{ work }}</li>
+        {% endfor %}
     {% endif %}
     {% if log.comment %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Комментарий:</span><br>

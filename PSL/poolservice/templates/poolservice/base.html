@@ -32,12 +32,10 @@
 <nav class="py-2 bg-body-tertiary border-bottom">
     <div class="container d-flex flex-wrap">
       <ul class="nav me-auto">
-          {% if request.user.is_authenticated %}
           {% for m in menu %}
           <!-- Элементы меню отображаются в цикле из переменной menu которая передается в context и загружается из utils -->
                 <li class="nav-item"><a href="{% url m.url_name %}" class="nav-link link-body-emphasis px-2"> {{m.title}} </a></li>
           {% endfor %}
-          {% endif %}
       </ul>
       <ul class="nav">
         {% if request.user.is_authenticated %}
@@ -56,22 +54,31 @@
 <header class="container border-bottom">
     <div class="container">
         <div class="row">
-            <div class="col-9" align="center">
+            <div class="col-9 sm-12">
                 <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
                     <img src="http://poolskeeper.ru/wa-data/public/site/img/pklogot-1.png" height="50">
-                    <span class="fs-4">&ensp; Журнал PH &ensp;</span>
+                    <span class="fs-4">&ensp;Журнал PH</span>
                  </a>
-            </div>
-            <div class="col-3" align="right">
-                <form class="col-6 col-lg-auto mb-3 mb-lg-0" role="search" >
-                    <input type="search" class="form-control" placeholder="Поиск..." aria-label="Поиск">
-                </form>
             </div>
         </div>
     </div>
 </header>
 
 {% block appmenu %}
+{% if request.user.is_authenticated %}
+<header class="container border-bottom">
+<nav class="py-2 bg-body-tertiary border-bottom">
+    <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto">
+          {% for m in appmenu %}
+          <!-- Элементы меню отображаются в цикле из переменной menu которая передается в context и загружается из utils -->
+                <li class="nav-item"><a href="{% url m.url_name %}" class="nav-link link-body-emphasis px-2"> {{m.title}} </a></li>
+          {% endfor %}
+      </ul>
+    </div>
+</nav>
+</header>
+{% endif %}
 {% endblock appmenu %}
 
 {% block body %}
@@ -112,7 +119,7 @@
 
 <footer class=" container pt-4 my-md-5 pt-md-5 border-top">
     <div class="row">
-      <div class="col-12 col-md">
+      <div class="col-12 col-md" align="center">
           <a href="http://www.poolskeeper.ru"
              class="text-decoration-none">
               <img class="mb-2" src="http://poolskeeper.ru/wa-data/public/site/img/pklogot-1.png" alt="" width="160" height="80">
@@ -121,11 +128,11 @@
       </div>
 {% block footermenu %}
       <div class="col-7 col-md">
-        <h5>ServiceWorks</h5>
+        <h5>Мои бассейны</h5>
         <ul class="list-unstyled text-small">
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Статистика</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Добавить работу</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Импорт данных</a></li>
+            {% for p in user_pools %}
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="{{ p.get_absolute_url }}">{{p.title}}</a></li>
+            {% endfor %}
         </ul>
       </div>
       <div class="col-7 col-md">

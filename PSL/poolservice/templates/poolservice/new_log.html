@@ -10,7 +10,14 @@
         <div class="container">
         {% csrf_token %} <!-- передается специальный ключ для защиты формы от подделки -->
         <div class="col-6 col-md">{{form.non_field_errors}}</div>
-        {{ form.as_p }}  <!-- as_p() - Метод класса Forms для отображения всех полей через -->
+        <!--{{ form.as_p }}   as_p() - Метод класса Forms для отображения всех полей через -->
+            {% for f in form %}
+        <p>
+            <label class="nav-item" for="{{ f.id_for_label }}">{{f.label}}:</label><br>{{f}}
+        </p>
+        <div class="col-6 col-md">{{f.errors}}</div>
+        {% endfor %}
+
             <div class="container" align="right">
                 <button type="submit" class="btn btn-primary">Добавить</button>
             </div>

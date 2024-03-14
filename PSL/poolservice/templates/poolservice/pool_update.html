@@ -1,0 +1,19 @@
+{% extends 'poolservice/base.html' %}
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block body %}
+
+<div class="container">
+<h1>{{title}}</h1>
+    <form action="" method="post">
+    {% csrf_token %} <!-- передается специальный ключ для защиты формы от подделки -->
+    <div class="col-6 col-md">{{form.non_field_errors}}</div>
+    {{ form.as_p }} <!--as_p() - Метод класса Forms для отображения всех полей через <p>-->
+    <div align="right" class="container">
+    <button type="submit" class="btn btn-primary">Изменить</button>
+    </div><br>
+</form>
+</div>
+{% endblock body %}

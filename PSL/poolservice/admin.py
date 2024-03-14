@@ -24,6 +24,14 @@ class PoolAdmin(admin.ModelAdmin):
 
     get_html_photo.short_description = "МиниФото"
 
+
+class ServiceWorkAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title']
+    list_display_links = ['id', 'title']
+    search_fields = ['title']
+
+
+admin.site.register(ServiceWork, ServiceWorkAdmin)
 """
 class ReagentAdmin(admin.ModelAdmin):
     list_display = ['id', 'title']

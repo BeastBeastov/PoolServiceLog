@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-from multiselectfield import MultiSelectField
 
 
 class Pool(models.Model):
@@ -16,8 +15,7 @@ class Pool(models.Model):
     equipment = models.TextField(max_length=1000, verbose_name="Комплектация", blank=True)
     description = models.TextField(max_length=1000, verbose_name="Описание", blank=True)
     photo = models.ImageField(upload_to="photos/%Y/%m/%d", blank=True)
-    #author = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.PROTECT)
-
+    author = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = "Бассейн"
@@ -33,19 +31,19 @@ class Pool(models.Model):
 
 class PoolService(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
-    pool = models.ForeignKey('Pool', null=True, on_delete=models.PROTECT, verbose_name="Бассейн")
+    pool = models.ForeignKey('Pool', default=0, on_delete=models.PROTECT, verbose_name="Бассейн")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     date_update = models.DateField(auto_now=True, verbose_name="Дата изменения")
-    PH = models.FloatField(max_length=3, verbose_name="Ph", null=True, blank=True)
+    PH = models.FloatField(max_length=4, verbose_name="Ph", null=True, blank=True)
     RX = models.IntegerField(verbose_name="Rx", null=True, blank=True)
-    CL = models.FloatField(max_length=3, verbose_name="Cl", null=True, blank=True)
+    CL = models.FloatField(max_length=4, verbose_name="Cl", null=True, blank=True)
     T = models.FloatField(max_length=4, verbose_name="Т°C", null=True, blank=True)
     water_cond = models.CharField(max_length=50, verbose_name="Состояние воды", blank=True)
     reagents = models.TextField(max_length=1000, verbose_name="Добавленные реагенты", blank=True)
-    works = models.TextField(max_length=1000, verbose_name="Выполненные работы", blank=True)
+    works = models.TextField(max_length=1000, default=None, verbose_name="Выполненные работы", blank=True)
     comment = models.TextField(max_length=1000, verbose_name="Свободный комментарий", blank=True)
     is_published = models.BooleanField(default=True, verbose_name="Опубликовано")
-    author = models.ForeignKey(User, verbose_name='Исполнитель', on_delete=models.PROTECT)
+    author = models.ForeignKey(User, default=0, verbose_name='Исполнитель', on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = "Сервисный выезд"
@@ -80,16 +78,17 @@ class Reagent(models.Model):
         verbose_name = "Реагент"
         verbose_name_plural = "Реагенты"
         ordering = ['title']
+"""
 
 
 class ServiceWork(models.Model):
-    WORKS_CHOICES = (('1', 'Уборка ручным водным пылесосом'),
-                     ('2', 'Чистка ватерлинии'),
-                     ('3', 'Уборка роботом-пылесосом'),
-                     ('4', 'Промывка фильтра'),
-                     ('5', 'Чистка стен щеткой'),
-                     ('6', 'Долив свежей воды'))
-    title = models.CharField(choices=WORKS_CHOICES, max_length=50)
+    # WORKS_CHOICES = (('1', 'Уборка ручным водным пылесосом'),
+    #                  ('2', 'Чистка ватерлинии'),
+    #                  ('3', 'Уборка роботом-пылесосом'),
+    #                  ('4', 'Промывка фильтра'),
+    #                  ('5', 'Чистка стен щеткой'),
+    #                  ('6', 'Долив свежей воды'))
+    title = models.CharField(max_length=255)
 
     def __str__(self):
         return self.title
@@ -98,6 +97,5 @@ class ServiceWork(models.Model):
         verbose_name = "Сервисная операция"
         verbose_name_plural = "Сервисные работы"
         ordering = ['title']
-"""
 
 

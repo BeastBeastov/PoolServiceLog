@@ -26,6 +26,7 @@ urlpatterns = [
     path('captcha/', include('captcha.urls')),
     path('', include('blog.urls')),
     path('', include('poolservice.urls')),
+    path('api/v1/poolservicelist/', PoolServiceAPIView.as_view()),
 ]
 
 if settings.DEBUG:

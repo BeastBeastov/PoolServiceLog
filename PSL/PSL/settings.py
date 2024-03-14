@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'poolservice.apps.PoolserviceConfig',
     'blog.apps.BlogConfig',
+    'rest_framework',
     'multiselectfield',
     'captcha',
 

@@ -1,0 +1,48 @@
+{% extends 'poolservice/base.html' %}
+{% load poolservicetags %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+
+{% block body %}
+<div class="row">
+    <div></div>
+    <div>
+        <div align="center">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'home' %}">
+                    <img class="mb-2" src="https://www.fiberglassswimmingpooltiling.com/wp-content/uploads/2018/10/Plain-pool.jpg" alt="" width="350" height="175">
+                </a>
+                {% else %}
+                <a href="#">
+                    <img class="mb-2" src="https://www.fiberglassswimmingpooltiling.com/wp-content/uploads/2018/10/Plain-pool.jpg" alt="" width="350" height="175">
+                </a>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+                  <div align="center">
+                        <h6 class="nav-item"><a href="{% url 'main' %}" class="nav-link"> Добро пожаловать, {{user.first_name}} !</a></h6>
+                  </div>
+                    <br>
+                  <div align="center">
+                      <h6 class="nav-item"><a href="{% url 'logout' %}" class="nav-link"> Выйти </a></h6>
+                  </div>
+            {% else %}
+                  <div align="center">
+                        <h6 class="nav-item"><a href="{% url 'register' %}" class="nav-link"> Регистрация </a></h6>
+                  </div>
+                    <br>
+                  <div align="center">
+                      <h6 class="nav-item"><a href="{% url 'login'%}" class="nav-link"> Войти </a></h6>
+                  </div>
+            {% endif %}
+        </div>
+    </div>
+    <div></div>
+</div>
+<br>
+{% endblock body %}
+
+{% block footermenu %}
+{% endblock footermenu %}

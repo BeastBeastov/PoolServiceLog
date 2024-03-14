@@ -1,15 +1,18 @@
 # Файл хранения классов Mixin и всех обобщенных методов и классов и общеприменимых данных
 
-from .models import *
+from poolservice.models import *
 import pandas as pd
 import numpy as np
 
 
 menu = [
          {'title':'Главная', 'url_name':'home'},
+         {'title':'Разработка', 'url_name':'blog'},
+         ]
+
+appmenu = [
          {'title':'Добавить сервис', 'url_name':'new_log'},
          {'title':'Новый бассейн', 'url_name':'new_pool'},
-         {'title':'Разработка', 'url_name':'blog'},
          ]
 
 
@@ -18,14 +21,14 @@ class DataMixin:
     def get_user_context(self, **kwargs):
         context = kwargs
         pools = Pool.objects.all()
+        user_pools = Pool.objects.filter(author=self.request.user)
         user_menu = menu.copy()
-
-        if not self.request.user.is_authenticated:
-            user_menu.pop(1)
-            user_menu.pop(1)
+        app_menu = appmenu.copy()
 
         context['menu'] = user_menu
+        context['appmenu'] =app_menu
         context['pools'] = pools
+        context['user_pools'] = user_pools
         #context['queryset'] = queryset
 
         if 'pool_selected' not in context:

@@ -28,7 +28,7 @@
     {% for a in p.get_answers %}
     <div class="row" style="background-color: #778899; color: #FFFFFF">
         <div class="col-6">{{a.author}}</div>
-        <div class="col-6" align="right">Время:{{a.time_create}}</div>
+        <div class="col-6" align="right"><small>Время: {{a.time_create}}</small></div>
     </div>
         <div>{{a.content|linebreaks}}</div>
     {% endfor %}

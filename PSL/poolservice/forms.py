@@ -2,14 +2,31 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from captcha.fields import CaptchaField
 
-from .models import *
-from .utils import DataMixinForm
+from .utils import *
+
+WORK_CHOICES = (
+    ('Ничего', 'Ничего'),
+    ('Уборка бассейна ручным водным пылесосом', 'Уборка бассейна ручным водным пылесосом'),
+    ('Промывка фильтра', 'Промывка фильтра'),
+    ('Уборка бассейна роботом-пылесосом', 'Уборка бассейна роботом-пылесосом'),
+    ('Чистка стен щёткой', 'Чистка стен щёткой'),
+    ('Долив свежей воды', 'Долив свежей воды'),
+    ('Чистка ватерлинии', 'Чистка ватерлинии'),
+)
 
 
-class NewPoolLogForm(DataMixinForm, forms.ModelForm):
-    def __init__(self, *args, **kwargs):
+class NewPoolLogForm(forms.ModelForm):
+    def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['pool'].empty_label = "Объект не выбран"
+        self.fields['works'].empty_label = "Ничего"
+        if user.is_staff:
+            self.fields['pool'].queryset = Pool.objects.all()
+        else:
+            self.fields['pool'].queryset = Pool.objects.filter(author=user)
+
+    works = forms.MultipleChoiceField(label='Выполненые работы', widget=forms.CheckboxSelectMultiple(),
+                                          choices=WORK_CHOICES)
 
     class Meta:
         model = PoolService
@@ -18,9 +35,9 @@ class NewPoolLogForm(DataMixinForm, forms.ModelForm):
 
 class NewPoolForm(DataMixinForm, forms.ModelForm):
     title = forms.CharField(label='Название объекта',
-                               widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Малиновка 10х5м'}))
+                               widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Малиновка 11х5.5м'}))
     slug = forms.SlugField(label='URL',
-                               widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'example: malinovka 10x5m'}))
+                               widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'malinovka-11x5_5m'}))
 
     class Meta:
         model = Pool
