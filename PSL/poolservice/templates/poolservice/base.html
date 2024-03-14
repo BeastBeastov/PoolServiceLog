@@ -149,8 +149,10 @@
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'about' %}">О проекте</a></li>
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'blog' %}">Разработка</a></li>
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'contact' %}">Обратная связь</a></li>
+         {% if request.user.is_staff %}
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">User agreement</a></li>
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'admin' %}">Админ</a></li>
+         {% endif %}
         </ul>
       </div>
 {% endblock footermenu %}
