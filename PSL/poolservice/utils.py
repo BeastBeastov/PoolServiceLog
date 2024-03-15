@@ -45,7 +45,7 @@ class DataMixinForm:
         for field in self.fields:
             self.fields[field].widget.attrs.update({
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'on'
             })
 
 

@@ -120,48 +120,9 @@
 </div>
       <!--Пагинация конец-->
 
-<footer class="container border-top">
-    <div class="row">
-      <div class="col-12 col-md" align="center">
-          <a href="#" class="text-decoration-none">
-              <img class="mb-2" src="https://rfsolokomotiv.ru/public/news/2022-07-08/97c152a16fff15df447b9ddc62071a17.jpg" alt="" width="160" height="80">
-              <small class="d-block mb-3 text-body-secondary">© www.lokoleto.ru 2024</small>
-          </a>
-      </div>
-{% comment %}
+
 {% block footermenu %}
-      <div class="col-8 col-md">
-        <h5>Фестиваль</h5>
-        <ul class="list-unstyled text-small">
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Статистика</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Фильтры</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Импорт данных</a></li>
-        </ul>
-      </div>
-      <div class="col-8 col-md">
-        <h5>Команда РЖД</h5>
-        <ul class="list-unstyled text-small">
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Волейбол</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Хоккей</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Футбол</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Лыжи</a></li>
-        </ul>
-      </div>
-      <div class="col-8 col-md">
-        <h5>About</h5>
-        <ul class="list-unstyled text-small">
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'about' %}">О проекте</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'development' %}">Разработка</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'contact' %}">Обратная связь</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Соглашение</a></li>
-            {% if request.user.is_staff %}
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'admin' %}">Админ</a></li>
-            {% endif %}
-        </ul>
-      </div>
 {% endblock footermenu %}
-{% endcomment %}
-    </div>
-  </footer>
+
 </body>
 </html>

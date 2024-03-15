@@ -32,8 +32,10 @@ class NewPoolLogForm(forms.ModelForm):
         else:
             self.fields['pool'].queryset = Pool.objects.filter(author=user)
 
-    works = forms.MultipleChoiceField(label='Выполненые работы', required=False, widget=forms.CheckboxSelectMultiple(),
-                                          choices=WORK_CHOICES)
+    works = forms.MultipleChoiceField(label='Выполненые работы', required=False,
+                                      widget=forms.CheckboxSelectMultiple(
+                                          attrs={'type':'checkbox'}
+                                      ), choices=WORK_CHOICES)
 
     class Meta:
         model = PoolService

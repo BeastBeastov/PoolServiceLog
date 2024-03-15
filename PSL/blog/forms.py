@@ -1,5 +1,3 @@
-from msilib.schema import CheckBox
-
 from django import forms
 from django.forms import RadioSelect, CheckboxInput, Select, NullBooleanSelect
 
