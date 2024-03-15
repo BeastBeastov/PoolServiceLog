@@ -11,45 +11,33 @@
 {% endif %}<br>
     {% if pool.volume %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Объем:</span>
-        <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{pool.volume}} куб.м.</span><br>
+    <p>🧊 {{pool.volume}} куб.м.</p>
     {% endif %}
     {% if pool.place %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Место расположения:</span><br>
-    <p>{{pool.place|linebreaksbr}}</p>
+    <p>🚚 {{pool.place|linebreaksbr}}</p>
     {% endif %}
     {% if pool.equipment %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Комплектация:</span><br>
-        <p>{{pool.equipment|linebreaksbr}}</p>
+        <p>🛠️ {{pool.equipment|linebreaksbr}}</p>
     {% endif %}
     {% if pool.description %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Описание:</span><br>
-        <p>{{pool.description|linebreaksbr}}</p>
+        <p>📋 {{pool.description|linebreaksbr}}</p>
     {% endif %}
     {% if pool.year_create %}
-    <p><span class="badge bg-light-subtle text-light-emphasis rounded-pill">Год постройки:</span>
-        <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{pool.year_create}} г.</span><br></p>
+    <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Год постройки:</span>
+            <p>📆 {{pool.year_create}} г.</p>
     {% endif %}
-    {% if pool.owner %}
-    <p><span class="badge bg-light-subtle text-light-emphasis rounded-pill">Контакты:</span><br>
-            {{pool.owner}}</p>
-    {% endif %}
+    <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Контакты:</span><br>
+            {% if pool.owner %}
+            <p>🧑🏻‍ {{pool.owner}}</p>
+            {% endif %}
             {% if pool.phone %}
-            <p>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
-                <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2"></path>
-            </svg>
-            {{pool.phone}}
-            </p>
+            <p>☎️ {{pool.phone}}</p>
             {% endif %}
             {% if pool.email %}
-            <a href="mailto:{{pool.email}}">
-              <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"></path>
-              </svg>
-            {{pool.email}}
-              </p>
-            </a>
+            <p>📧 <a href="mailto:{{pool.email}}">{{pool.email}}</a></p>
             {% endif %}
     {% if 'new_log' in request.META.HTTP_REFERER %}
                 <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill"><a href="{% url 'home' %}" class="nav-link">Назад</a></span>
@@ -63,5 +51,34 @@
                 <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill"><a href="{% url 'pool_delete' pool.id %}" class="nav-link">Удалить</a></span>
     {% endif %}
 </div>
-
+<br>
+<div class="container">
+    <h4>Таблица сервисных операций по бассейну {{pool.title}}</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Дата</th>
+          <th scope="col">Ph</th>
+          <th scope="col">Cl</th>
+          <th scope="col">Т°C</th>
+          <th scope="col">Реагенты</th>
+        </tr>
+      </thead>
+        <tbody>
+        {% for l in logs %}
+        <tr>
+            <td>
+                <a class="nav-link" href="{% url 'log' pk=l.pk%}">🔍 {% if l.works %} 🛠️ {% endif %}
+                    {% if l.comment %}💬 {% endif %}</a>
+                <small>{{ l.time_create|date:"jMY"}}</small>
+            </td>
+            <td>{% if l.PH %}{{ l.PH }}{% endif %}</td>
+            <td>{% if l.CL %}{{ l.CL }}{% endif %}</td>
+            <td>{% if l.T %}{{ l.T }}{% endif %}</td>
+            <td><small>{{l.reagents|linebreaksbr}}</small></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock body %}

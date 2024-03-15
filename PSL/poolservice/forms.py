@@ -36,7 +36,7 @@ class NewPoolLogForm(forms.ModelForm):
                                 attrs={'class': 'form-control', 'type': 'text', 'placeholder': 'например: Выезд по заявке'}))
     pool = forms.ModelChoiceField(label='Объект', queryset=queryset,
                                   widget=forms.Select(
-                                      attrs={'class': 'form-control', 'type': 'text'}
+                                      attrs={'class': 'form-select', 'type': 'text'}
                                   ))
     PH = forms.FloatField(label='Ph', required=False,
                             widget=forms.TextInput(
@@ -75,7 +75,7 @@ class NewPoolForm(DataMixinForm, forms.ModelForm):
     place = forms.CharField(label='Место расположения', required=False,
                                widget=forms.Textarea(
                                    attrs={'class': 'form-control form-control-sm', 'rows': '3',
-                  'placeholder': 'например: Московская область, Леннинский р-н, пос.Володарского, ул.Гарибальди, д.14'}))
+                  'placeholder': 'например: Московская область, Ленинский р-н, пос.Володарского, ул.Гарибальди, д.14'}))
     equipment = forms.CharField(label='Комплектация', required=False,
                                widget=forms.Textarea(
                                    attrs={'class': 'form-control form-control-sm', 'rows': '3',

@@ -63,6 +63,8 @@
                 <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill"><a href="{% url 'home' %}" class="nav-link">К списку</a></span>
                 {% elif 'pool_logs' in request.META.HTTP_REFERER %}
                 <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill"><a onclick="javascript:history.back();" href="#"  class="nav-link">К списку</a></span>
+                {% elif 'pool_show' in request.META.HTTP_REFERER %}
+                <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill"><a onclick="javascript:history.back();" href="#"  class="nav-link">К списку</a></span>
                 {% else %}
                 <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill"><a  href="{% url 'home' %}" class="nav-link">К списку</a></span>
                 {% endif %}

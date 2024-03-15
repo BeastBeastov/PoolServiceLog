@@ -33,7 +33,7 @@ from .utils import *
 #     return render(request,'poolservice/index.html', context=context)
 
 
-class PoolServiceView(DataMixin, ListView):
+class PoolServiceView(LoginRequiredMixin, DataMixin, ListView):
     paginate_by = 10
     model = PoolService
     template_name = 'poolservice/index.html'
@@ -131,6 +131,7 @@ class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
 class NewPoolView(LoginRequiredMixin, DataMixin, CreateView):
     form_class = NewPoolForm
     template_name = 'poolservice/new_pool.html'
+    login_url = reverse_lazy('login')
     raise_exception = True
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -216,7 +217,7 @@ def update_log(request, log_id):
 #     log.delete()
 #     return redirect('home')
 
-class DeleteLogView(DeleteView):
+class DeleteLogView(LoginRequiredMixin, DeleteView):
     model = PoolService
     template_name = 'poolservice/log_delete.html'
     context_object_name = 'log'
@@ -284,13 +285,9 @@ class LogView(LoginRequiredMixin, DataMixin, DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['pk_url_kwarg'] = 'pk'
-        # context['works'] = context['log'].works
-        # works_str = context['log'].works
-        # context['works'] = works_str.strip("[]").replace("'", "").split(", ")
         context['works'] = context['log'].works
         context['object_list'] = PoolLogsView.queryset
-        context['title'] = str(context['log'].title)
-        c_def = self.get_user_context(title='Авторизация')
+        c_def = self.get_user_context(title=str(context['log'].title))
         return dict(list(context.items()) + list(c_def.items()))
 
 
@@ -313,6 +310,7 @@ class PoolView(DataMixin, DetailView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['logs'] = PoolService.objects.filter(pool=context['pool'])
         c_def = self.get_user_context(title='Бассейн ' + str(context['pool']))
         return dict(list(context.items()) + list(c_def.items()))
 

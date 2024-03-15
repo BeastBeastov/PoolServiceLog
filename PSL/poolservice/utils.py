@@ -1,4 +1,5 @@
 # Файл хранения классов Mixin и всех обобщенных методов и классов и общеприменимых данных
+from django.urls import reverse_lazy
 
 from poolservice.models import *
 import pandas as pd
@@ -18,6 +19,8 @@ appmenu = [
 
 # Обобщенный класс для классов представления в views.py
 class DataMixin:
+    login_url = reverse_lazy('login')
+    raise_exception = True
     def get_user_context(self, **kwargs):
         context = kwargs
         pools = Pool.objects.all()
