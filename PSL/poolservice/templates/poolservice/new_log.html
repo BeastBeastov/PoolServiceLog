@@ -11,6 +11,7 @@
         {% csrf_token %} <!-- передается специальный ключ для защиты формы от подделки -->
         <div>{{form.non_field_errors}}</div>
         <!--{{ form.as_p }}   as_p() - Метод класса Forms для отображения всех полей через -->
+
             {% for f in form %}
             {% if f.id_for_label %}
             <label for="{{ f.id_for_label }}">{{f.label}}:</label><br>{{f}}

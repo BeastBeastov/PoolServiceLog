@@ -4,15 +4,6 @@ from captcha.fields import CaptchaField
 
 from .utils import *
 
-# WORK_CHOICES = (
-#     (1, 'Уборка бассейна ручным водным пылесосом'),
-#     (2, 'Промывка фильтра'),
-#     (3, 'Уборка бассейна роботом-пылесосом'),
-#     (4, 'Чистка стен щёткой'),
-#     (5, 'Долив свежей воды'),
-#     (6, 'Чистка ватерлинии'),
-# )
-
 WORK_CHOICES = (
     ('Уборка бассейна ручным водным пылесосом', 'Уборка бассейна ручным водным пылесосом'),
     ('Промывка фильтра', 'Промывка фильтра'),
@@ -24,18 +15,52 @@ WORK_CHOICES = (
 
 
 class NewPoolLogForm(forms.ModelForm):
+    queryset = Pool.objects.none()
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['pool'].empty_label = "Объект не выбран"
         if user.is_staff:
             self.fields['pool'].queryset = Pool.objects.all()
+            self.queryset = self.fields['pool'].queryset
         else:
             self.fields['pool'].queryset = Pool.objects.filter(author=user)
+            self.queryset = self.fields['pool'].queryset
 
     works = forms.MultipleChoiceField(label='Выполненые работы', required=False,
                                       widget=forms.CheckboxSelectMultiple(
                                           attrs={'type':'checkbox'}
                                       ), choices=WORK_CHOICES)
+
+    title = forms.CharField(label='Заголовок',
+                            widget=forms.TextInput(
+                                attrs={'class': 'form-control', 'type': 'text', 'placeholder': 'например: Выезд по заявке'}))
+    pool = forms.ModelChoiceField(label='Объект', queryset=queryset,
+                                  widget=forms.Select(
+                                      attrs={'class': 'form-control', 'type': 'text'}
+                                  ))
+    PH = forms.FloatField(label='Ph', required=False,
+                            widget=forms.TextInput(
+                                attrs={'class': 'form-control form-control-sm',}))
+    RX = forms.IntegerField(label='Redox', required=False,
+                         widget=forms.TextInput(
+                             attrs={'class': 'form-control form-control-sm', }))
+    CL = forms.FloatField(label='Cl', required=False,
+                         widget=forms.TextInput(
+                             attrs={'class': 'form-control form-control-sm', }))
+    T = forms.FloatField(label='Т°C', required=False,
+                         widget=forms.TextInput(
+                             attrs={'class': 'form-control form-control-sm', }))
+    water_cond = forms.CharField(label='Состояние воды', required=False,
+                        widget=forms.TextInput(
+                            attrs={'class': 'form-control form-control-sm', 'placeholder': 'например: Чистая, прозрачная' }))
+    reagents = forms.CharField(label='Добавленные реагенты', required=False,
+                                 widget=forms.Textarea(
+                                     attrs={'class': 'form-control form-control-sm', 'rows':'3',
+                                            'placeholder': 'например: Медленный стабилизированный хлор 1таблетка 200гр.'}))
+    comment = forms.CharField(label='Свободный комментарий', required=False,
+                               widget=forms.Textarea(
+                                   attrs={'class': 'form-control form-control-sm', 'rows': '3',
+                                          'placeholder': 'например: Устранили протечку в районе шарового крана'}))
 
     class Meta:
         model = PoolService
@@ -47,6 +72,18 @@ class NewPoolForm(DataMixinForm, forms.ModelForm):
                                widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Малиновка 11х5.5м'}))
     slug = forms.SlugField(label='URL',
                                widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'malinovka-11x5_5m'}))
+    place = forms.CharField(label='Место расположения', required=False,
+                               widget=forms.Textarea(
+                                   attrs={'class': 'form-control form-control-sm', 'rows': '3',
+                  'placeholder': 'например: Московская область, Леннинский р-н, пос.Володарского, ул.Гарибальди, д.14'}))
+    equipment = forms.CharField(label='Комплектация', required=False,
+                               widget=forms.Textarea(
+                                   attrs={'class': 'form-control form-control-sm', 'rows': '3',
+                         'placeholder': 'например: Чаша: монолит-бетон, переливной лоток\nОблицовка: мозаика, мрамор.'}))
+    description = forms.CharField(label='Описание', required=False,
+                                widget=forms.Textarea(
+                                    attrs={'class': 'form-control form-control-sm', 'rows': '3',
+                         'placeholder': 'например: Уличный бассейн с павильоном и подогревом, сезонного использования'}))
 
     class Meta:
         model = Pool
