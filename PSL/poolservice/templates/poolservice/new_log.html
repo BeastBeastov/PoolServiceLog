@@ -4,29 +4,23 @@
 {% endblock title %}
 
 {% block body %}
-<div class="container">
+<div class="container" xmlns="http://www.w3.org/1999/html">
     <h1>{{title}}</h1>
     <form action="{% url 'new_log' %}" method="post">
         <div class="container">
         {% csrf_token %} <!-- передается специальный ключ для защиты формы от подделки -->
         <div>{{form.non_field_errors}}</div>
-        <!--{{ form.as_p }}   as_p() - Метод класса Forms для отображения всех полей через -->
-
+       <!-- {{ form.as_p }} as_p() - Метод класса Forms для отображения всех полей через -->
             {% for f in form %}
-            {% if f.id_for_label %}
-            <label for="{{ f.id_for_label }}">{{f.label}}:</label><br>{{f}}
-            {% else %}
-             <p>
-            <label  for="{{ f.id_for_label }}">{{f.label}}:</label><br>{{f}}
+            <p>
+            <label  for="{{ f.id_for_label }}">{{f.label}}:</label>{{f}}
+            <div>{{f.errors}}</div>
             </p>
-            {% endif%}
-        <div>{{f.errors}}</div>
-        {% endfor %}
-
+            {% endfor %}
             <div class="container" align="right">
                 <button type="submit" class="btn btn-primary">Добавить</button>
             </div>
-        </div><br>
+        </div>
     </form>
 </div>
 {% endblock body %}

@@ -14,3 +14,9 @@ def get_pools():
 def get_logs():
     return PoolService.objects.all()
 
+@register.simple_tag()
+def get_dot(ph):
+    if not ph:
+        ph = '0'
+    return float(str(ph).replace(',','.'))
+

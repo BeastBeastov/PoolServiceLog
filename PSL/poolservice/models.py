@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django_matplotlib import MatplotlibFigureField
 
 from multiselectfield import MultiSelectField
 
@@ -21,6 +22,7 @@ WORK_CHOICES = (
     ('Чистка ватерлинии', 'Чистка ватерлинии'),
 )
 
+
 class Pool(models.Model):
     title = models.CharField(max_length=255, verbose_name="Название", db_index=True)
     owner = models.CharField(max_length=255, verbose_name="Владелец")
@@ -34,6 +36,8 @@ class Pool(models.Model):
     description = models.TextField(max_length=1000, verbose_name="Описание", blank=True)
     photo = models.ImageField(upload_to="photos/%Y/%m/%d", blank=True)
     author = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.PROTECT)
+
+    # figure = MatplotlibFigureField(figure='my_figure', silent=True, plt_kwargs={'pool': slug })
 
     class Meta:
         verbose_name = "Бассейн"
