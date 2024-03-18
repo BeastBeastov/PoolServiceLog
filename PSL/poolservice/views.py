@@ -310,7 +310,15 @@ class PoolView(DataMixin, DetailView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['logs'] = PoolService.objects.filter(pool=context['pool'])[:20]
+        queryset = PoolService.objects.filter(pool=context['pool'])
+        context['logs'] = queryset[:20]
+        total = queryset.count()
+        rx_count = queryset.filter(RX__gte=300).count()
+        cl_count = queryset.filter(CL__gte=0.05).count()
+        t_count = queryset.filter(T__gte=10).count()
+        if rx_count >= total/2: context['show_rx'] = True
+        if cl_count >= total/2: context['show_cl'] = True
+        if t_count >= total / 2: context['show_t'] = True
         c_def = self.get_user_context(title='Бассейн ' + str(context['pool']))
         return dict(list(context.items()) + list(c_def.items()))
 

@@ -1,4 +1,6 @@
 from django import template
+from django.db.models import Avg
+
 from poolservice.models import *
 
 
@@ -14,9 +16,10 @@ def get_pools():
 def get_logs():
     return PoolService.objects.all()
 
+
 @register.simple_tag()
-def get_dot(ph):
-    if not ph:
-        ph = '0'
-    return float(str(ph).replace(',','.'))
+def get_dot(item):
+    if not item:
+        item = '0'
+    return float(str(item).replace(',','.'))
 
