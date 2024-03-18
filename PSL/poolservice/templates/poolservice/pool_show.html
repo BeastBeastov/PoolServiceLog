@@ -75,7 +75,7 @@
                 <small>{{ l.time_create|date:"jMY"}}</small>
             </td>
             <td>{% if l.PH %}{{ l.PH }}{% endif %}</td>
-            <td>{% if l.CL %}{{ l.CL }}{% endif %}<br>{% if l.RX %}{{ l.RX }}{% endif %}</td>
+            <td>{% if l.CL %}{{ l.CL }}<br>{% endif %}{% if l.RX %}{{ l.RX }}{% endif %}</td>
             <td>{% if l.T %}{{ l.T }}{% endif %}</td>
             <td><small>{{l.reagents|linebreaksbr}}</small></td>
         </tr>

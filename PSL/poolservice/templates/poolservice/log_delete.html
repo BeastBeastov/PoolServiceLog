@@ -9,7 +9,7 @@
 <h1>{{title}}</h1>
     <form action="" method="post">
     {% csrf_token %} <!-- передается специальный ключ для защиты формы от подделки -->
-    <p>Вы действительно хотите удалить " {{ log.title }} {{ log.pool.title }} {{ log.time_create }}"?</p>
+    <p>Вы действительно хотите удалить <br>" {{ log.title }} {{ log.pool.title }}<br>{{ log.time_create }}"?</p>
     <div align="right" class="container">
     <button type="submit" class="btn btn-primary">Удалить</button>
     </div><br>
