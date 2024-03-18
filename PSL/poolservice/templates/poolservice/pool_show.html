@@ -61,8 +61,7 @@
         <tr>
           <th scope="col">Дата</th>
           <th scope="col">Ph</th>
-          <th scope="col">Rx</th>
-          <th scope="col">Cl</th>
+          <th scope="col">Cl/Rx</th>
           <th scope="col">Т°C</th>
           <th scope="col">Реагенты</th>
         </tr>
@@ -76,8 +75,7 @@
                 <small>{{ l.time_create|date:"jMY"}}</small>
             </td>
             <td>{% if l.PH %}{{ l.PH }}{% endif %}</td>
-            <td>{% if l.RX %}{{ l.RX }}{% endif %}</td>
-            <td>{% if l.CL %}{{ l.CL }}{% endif %}</td>
+            <td>{% if l.CL %}{{ l.CL }}{% endif %}<br>{% if l.RX %}{{ l.RX }}{% endif %}</td>
             <td>{% if l.T %}{{ l.T }}{% endif %}</td>
             <td><small>{{l.reagents|linebreaksbr}}</small></td>
         </tr>
