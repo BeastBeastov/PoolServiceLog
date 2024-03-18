@@ -313,11 +313,13 @@ class PoolView(DataMixin, DetailView):
         queryset = PoolService.objects.filter(pool=context['pool'])
         context['logs'] = queryset[:20]
         total = queryset.count()
+        ph_count = queryset.filter(PH__gte=5).count()
         rx_count = queryset.filter(RX__gte=300).count()
         cl_count = queryset.filter(CL__gte=0.05).count()
         t_count = queryset.filter(T__gte=10).count()
-        if rx_count >= total/2: context['show_rx'] = True
-        if cl_count >= total/2: context['show_cl'] = True
+        if ph_count >= total / 2: context['show_ph'] = True
+        if rx_count >= total / 2: context['show_rx'] = True
+        if cl_count >= total / 2: context['show_cl'] = True
         if t_count >= total / 2: context['show_t'] = True
         c_def = self.get_user_context(title='Бассейн ' + str(context['pool']))
         return dict(list(context.items()) + list(c_def.items()))

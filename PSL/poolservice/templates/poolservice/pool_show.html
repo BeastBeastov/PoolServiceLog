@@ -178,8 +178,10 @@
     {% endif %}
 </div>
 <br>
+
+ {% if logs %}
 <div class="container">
-    <h4>Таблица сервисных операций по бассейну {{pool.title}}</h4>
+    <h4>Таблица сервисных операций по бассейну <br>{{pool.title}}</h4>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -206,9 +208,11 @@
         {% endfor %}
         </tbody>
     </table>
-        {% if logs %}
 
+        {% if show_ph %}
             <div id="curve_chart1" style=" width: 100%, height: 300px;"></div>
+        {% endif %}
+
         {% if show_cl %}
             <div id="curve_chart2" style="width: 100%, height: 300px;"></div>
         {% endif %}
