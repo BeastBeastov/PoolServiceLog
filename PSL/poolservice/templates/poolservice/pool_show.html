@@ -23,7 +23,7 @@
           title: 'Уровень Ph',
           curveType: 'function',
           legend: { position: 'top' },
-          colors:['green','#004411'],
+          colors:['green'],
           pointSize: '5',
 
         };
@@ -54,6 +54,7 @@
           title: 'Содержание свободного хлора',
           curveType: 'function',
           legend: { position: 'top' },
+          colors:['blue'],
           pointSize: '5',
         };
 
@@ -83,7 +84,7 @@
           title: 'Окислительно-восстановительный потенциал',
           curveType: 'function',
           legend: { position: 'top' },
-          colors:['yellow'],
+          colors:['orange'],
           pointSize: '5',
         };
 
@@ -113,7 +114,7 @@
           title: 'Температура воды',
           curveType: 'function',
           legend: { position: 'top' },
-          colors:['red','#004411'],
+          colors:['red'],
           pointSize: '5',
         };
 
@@ -205,6 +206,7 @@
         {% endfor %}
         </tbody>
     </table>
+        {% if logs %}
 
             <div id="curve_chart1" style=" width: 100%, height: 300px;"></div>
         {% if show_cl %}
@@ -218,6 +220,7 @@
         {% if show_t %}
             <div id="curve_chart4" style="width: 100%, height: 300px;"></div>
         {% endif %}
+    {% endif %}
 
 
 
