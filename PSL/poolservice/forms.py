@@ -87,7 +87,8 @@ class NewPoolForm(DataMixinForm, forms.ModelForm):
 
     class Meta:
         model = Pool
-        fields = ['title','slug','owner','email','phone','place','volume','year_create','equipment','description']
+        fields = ['title','slug','owner','email','phone','place','volume',
+                  'year_create','equipment','description','photo']
 
 
 class RegisterUserForm(DataMixinForm, UserCreationForm):

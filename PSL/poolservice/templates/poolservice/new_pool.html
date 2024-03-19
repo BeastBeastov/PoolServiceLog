@@ -7,7 +7,7 @@
 
 <div class="container">
 <h1>{{title}}</h1>
-    <form action="{% url 'new_pool' %}" method="post">
+    <form action="{% url 'new_pool' %}" method="post" enctype='multipart/form-data'>
     {% csrf_token %} <!-- передается специальный ключ для защиты формы от подделки -->
     <div class="col-6 col-md">{{form.non_field_errors}}</div>
     {{ form.as_p }} <!--as_p() - Метод класса Forms для отображения всех полей через <p>-->

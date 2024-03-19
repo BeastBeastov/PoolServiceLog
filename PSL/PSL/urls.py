@@ -35,7 +35,7 @@ urlpatterns = [
     path('api/v1/poolservicelist/', PoolServiceAPIView.as_view()),
 ] + static_urls(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# if settings.DEBUG:
-#      urlpatterns += static_urls(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+     urlpatterns += static_urls(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = pageNotFound # Обработчик будет работать только если в settings.py Debug = False

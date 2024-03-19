@@ -34,7 +34,7 @@ class Pool(models.Model):
     year_create = models.CharField(max_length=10, verbose_name="Год постройки", blank=True)
     equipment = models.TextField(max_length=1000, verbose_name="Комплектация", blank=True)
     description = models.TextField(max_length=1000, verbose_name="Описание", blank=True)
-    photo = models.ImageField(upload_to="photos/%Y/%m/%d", blank=True)
+    photo = models.ImageField(upload_to="photos/%Y/%m/%d", default="photos/pool_default.jpg", verbose_name="Фото")
     author = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.PROTECT)
 
     # figure = MatplotlibFigureField(figure='my_figure', silent=True, plt_kwargs={'pool': slug })

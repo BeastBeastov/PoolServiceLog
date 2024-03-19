@@ -141,6 +141,7 @@ class NewPoolView(LoginRequiredMixin, DataMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        form.instance.FILES = self.request.FILES
         form.save()
         return super().form_valid(form)
 
@@ -337,7 +338,7 @@ def pool_update(request, pool_slug):
         'menu': menu,
     }
     if request.method == "POST":
-        form = NewPoolForm(data=request.POST, instance=pool)
+        form = NewPoolForm(data=request.POST, instance=pool, files=request.FILES)
         if form.is_valid():
             form.save()
             return redirect('home')
