@@ -13,7 +13,7 @@
 
           ['Дата', 'Ph'],
           {% for d in logs %}
-          ['{{d.time|date:"jMY"}}', {% get_dot d.PH %}],
+          ['{{d.time_create|date:"jMY"}}', {% get_dot d.PH %}],
           {% endfor %}
 
         ]);
@@ -44,7 +44,7 @@
 
           ['Дата', 'Cl'],
           {% for d in logs %}
-          ['{{d.time|date:"jMY"}}', {% get_dot d.CL %}],
+          ['{{d.time_create|date:"jMY"}}', {% get_dot d.CL %}],
           {% endfor %}
 
         ]);
@@ -74,7 +74,7 @@
 
           ['Дата', 'Redox'],
           {% for d in logs %}
-          ['{{d.time|date:"jMY"}}', {% get_dot d.RX %}],
+          ['{{d.time_create|date:"jMY"}}', {% get_dot d.RX %}],
           {% endfor %}
 
         ]);
@@ -104,7 +104,7 @@
 
           ['Дата', 'Т°C'],
           {% for d in logs %}
-          ['{{d.time|date:"jMY"}}', {% get_dot d.T %}],
+          ['{{d.time_create|date:"jMY"}}', {% get_dot d.T %}],
           {% endfor %}
 
         ]);
