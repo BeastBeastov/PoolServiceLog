@@ -251,7 +251,7 @@ class PoolView(DataMixin, DetailView):
     model = Pool
     template_name = 'poolservice/pool_show.html'
     slug_url_kwarg = 'pool_slug'
-    start_time = datetime(2024,1,1)
+    start_time = datetime(2023,1,1)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
