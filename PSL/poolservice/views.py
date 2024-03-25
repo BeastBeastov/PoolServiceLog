@@ -211,7 +211,7 @@ class PoolLogsView(LoginRequiredMixin, DataMixin, ListView):
         context['rs_book'] = reagent_statistics(context['logs'])[1]
         context['title'] = 'Сервис ' + str(context['logs'][0].pool)
         context['pool_selected'] = context['logs'][0].pool_id
-        c_def = self.get_user_context(title='Авторизация')
+        c_def = self.get_user_context(title='Сервис ' + str(context['logs'][0].pool))
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
