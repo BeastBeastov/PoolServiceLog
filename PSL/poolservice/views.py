@@ -45,6 +45,7 @@ class PoolServiceView(LoginRequiredMixin, DataMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['queryset'] = self.get_queryset()
         context['menu'] = menu
+        context['rs_book'] = reagent_statistics(context['logs'])[1]
         c_def = self.get_user_context(title='Главная страница')
         return dict(list(context.items()) + list(c_def.items()))
 
@@ -100,9 +101,8 @@ class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
     def get(self, request):
         form = NewPoolLogForm(user=request.user)
         context = {
-            'appmenu': appmenu,
             'form': form,
-            'menu': menu,  # предполагается, что переменная menu определена
+            'menu': menu+appmenu,  # предполагается, что переменная menu определена
             'title': 'Добавить новую запись в журнал',
         }
         return render(request, 'poolservice/new_log.html', context=context)
@@ -115,17 +115,11 @@ class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
             return redirect('home')
         else:
             context = {
-                'appmenu': appmenu,
                 'form': form,
-                'menu': menu,
+                'menu': menu+appmenu,
                 'title': 'Добавить новую запись в журнал',
             }
             return render(request, 'poolservice/new_log.html', context=context)
-
-    # def form_valid(self, form):
-    #     form.instance.author = self.request.user
-    #     form.save()
-    #     return super().form_valid(form)
 
 
 class NewPoolView(LoginRequiredMixin, DataMixin, CreateView):
@@ -144,27 +138,6 @@ class NewPoolView(LoginRequiredMixin, DataMixin, CreateView):
         form.instance.FILES = self.request.FILES
         form.save()
         return super().form_valid(form)
-
-
-# @login_required
-# def new_pool(request):
-#     if request.method == 'POST':
-#         form = NewPoolForm(request.POST)
-#         if form.is_valid:
-#             try:
-#                 form.author = request.user
-#                 form.save()
-#                 return redirect('home')
-#             except:
-#                 form.add_error("Ошибка")
-#     else:
-#         form = NewPoolForm()
-#     context = {
-#         'form': form,
-#         'menu': menu,
-#         'title': 'Добавить новый бассейн',
-#     }
-#     return render(request, 'poolservice/new_pool.html', context=context)
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -212,12 +185,6 @@ def update_log(request, log_id):
     return render(request, 'poolservice/update.html', context=context)
 
 
-# @login_required # Для ограничения доступа используется специальный декоратор
-# def delete_log(request, log_id):
-#     log = PoolService.objects.get(pk=log_id)
-#     log.delete()
-#     return redirect('home')
-
 class DeleteLogView(LoginRequiredMixin, DeleteView):
     model = PoolService
     template_name = 'poolservice/log_delete.html'
@@ -231,34 +198,7 @@ class DeleteLogView(LoginRequiredMixin, DeleteView):
         return context
 
 
-# @login_required
-# def show_log(request, pk):
-#     log = get_object_or_404(PoolService, pk=pk)
-#
-#     context = {
-#         'pk_url_kwarg': pk,
-#         'log': log,
-#         'title': log.title,
-#         'menu': menu,
-#     }
-#     return render(request, 'poolservice/log.html', context=context)
-
-# Функция представления для примера, аналогичная нижеописанному классу представления
-# def pool_logs(request, pool_id):
-#     logs = PoolService.objects.filter(pool_id=pool_id).order_by('date_create')
-#     pools = Pool.objects.all()
-#     context = {
-#         'logs': logs,
-#         'pools': pools,
-#         'menu': menu,
-#         'pool_selected': pool_id,
-#         'title': 'Главная страница',
-#     }
-#     return render(request, 'poolservice/index.html', context=context)
-
-
 class PoolLogsView(LoginRequiredMixin, DataMixin, ListView):
-    # Оставил этот класс без использования DataMixin, чтобы наглядно видеть и понимать разницу
     paginate_by = 5
     model = PoolService
     template_name = 'poolservice/index.html'
@@ -268,7 +208,7 @@ class PoolLogsView(LoginRequiredMixin, DataMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['queryset'] = self.get_queryset()
-        # context['menu'] = menu
+        context['rs_book'] = reagent_statistics(context['logs'])[1]
         context['title'] = 'Сервис ' + str(context['logs'][0].pool)
         context['pool_selected'] = context['logs'][0].pool_id
         c_def = self.get_user_context(title='Авторизация')
@@ -288,6 +228,7 @@ class LogView(LoginRequiredMixin, DataMixin, DetailView):
         context['pk_url_kwarg'] = 'pk'
         context['works'] = context['log'].works
         context['object_list'] = PoolLogsView.queryset
+        context['rs'] = Reagent.objects.filter(poolservice=context['log'])
         c_def = self.get_user_context(title=str(context['log'].title))
         return dict(list(context.items()) + list(c_def.items()))
 
@@ -312,7 +253,14 @@ class PoolView(DataMixin, DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         queryset = PoolService.objects.filter(pool=context['pool'])
-        context['logs'] = queryset[:20]
+        context['logs'] = queryset[:15]
+        first = 0
+        for log in context['logs']:
+            first = log
+        if first:
+            context['first_log_time'] = first.time_create
+        context['reagents_book'] = reagent_statistics(context['logs'])[0]
+        context['rs_book'] = reagent_statistics(context['logs'])[1]
         total = queryset.count()
         ph_count = queryset.filter(PH__gte=5).count()
         rx_count = queryset.filter(RX__gte=300).count()
@@ -371,8 +319,71 @@ class ContactFormView(DataMixin, FormView):
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
-        print(form.cleaned_data)
         return redirect('home')
+
+
+class CreateReagentNameView(DataMixin, CreateView):
+    form_class = ReagentNameForm
+    template_name = 'poolservice/add_reagent_name.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Новый реагент')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+
+class AddReagentView(DataMixin, CreateView):
+    model = ReagentForm
+    template_name = 'googlecharts/add_reagent_log.html'
+    current_pk = None
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Добавить реагент'
+        return context
+
+    def get(self, request, pk):
+        form = ReagentForm()
+        self.current_pk = pk
+        context = {
+            'log': PoolService.objects.get(pk=pk),
+            'rs': Reagent.objects.filter(poolservice=pk),
+            'pk': pk,
+            'form': form,
+            'menu': menu,
+            'title': 'Добавить реагент',
+        }
+        return render(request, 'poolservice/add_reagent_log.html', context=context)
+
+    def post(self, request, pk):
+        form = ReagentForm(data=request.POST)
+        if form.is_valid():
+            reagent = form.cleaned_data.get('reagent')
+            quantity = form.cleaned_data.get("quantity")
+            ps = PoolService.objects.get(pk=pk)
+            Reagent.objects.create(poolservice=ps, reagent=reagent, quantity=quantity)
+            return redirect(request.META.get('HTTP_REFERER'))
+            # return redirect(ps.get_absolute_url())
+        else:
+            context = {
+                'log': PoolService.objects.get(pk=pk),
+                'rs': Reagent.objects.filter(poolservice=pk),
+                'form': form,
+                'menu': menu,
+                'title': 'Добавить реагент',
+            }
+            return render(request, 'poolservice/add_reagent_log.html', context=context)
+
+
+def delete_reagent_log(request, pk):
+    reagent_log = Reagent.objects.get(pk=pk)
+    reagent_log.delete()
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 def admin_view(request):
@@ -412,7 +423,6 @@ def archive(request, year):
     elif int(year) < 1950:
         return redirect('home', permanent=True)
     return HttpResponse(f"<h1>Вывод по годам</h1><p>{year}</p>")
-
 
 
 def pageNotFound(request, exception):

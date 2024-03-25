@@ -7,13 +7,14 @@ import numpy as np
 
 
 menu = [
-         {'title':'Главная', 'url_name':'home'},
+         {'title':'Начало', 'url_name':'begin'},
          {'title':'Разработка', 'url_name':'blog'},
          ]
 
 appmenu = [
          {'title':'Добавить сервис', 'url_name':'new_log'},
          {'title':'Новый бассейн', 'url_name':'new_pool'},
+         {'title':'Новый реагент', 'url_name':'add_reagent_name'},
          ]
 
 
@@ -21,6 +22,7 @@ appmenu = [
 class DataMixin:
     login_url = reverse_lazy('login')
     raise_exception = True
+
     def get_user_context(self, **kwargs):
         context = kwargs
         pools = Pool.objects.all()
@@ -28,14 +30,10 @@ class DataMixin:
         user_menu = menu.copy()
         app_menu = appmenu.copy()
 
-        context['menu'] = user_menu
-        context['appmenu'] =app_menu
+        context['menu'] = user_menu + app_menu
         context['pools'] = pools
         context['user_pools'] = user_pools
-        #context['queryset'] = queryset
 
-        if 'pool_selected' not in context:
-            context['pool_selected'] = 0
         return context
 
 
@@ -50,6 +48,19 @@ class DataMixinForm:
                 'class': 'form-control',
                 'autocomplete': 'on'
             })
+
+
+def reagent_statistics(queryset):
+    if not queryset: return None
+    reagent_set = Reagent.objects.none()
+    reagents_book = dict()
+    for log in queryset:
+        reagent_set|=Reagent.objects.filter(poolservice=log.pk)
+    for item in reagent_set:
+        reagents_book[item.reagent.title] =  reagents_book.pop(item.reagent.title, 0) + item.quantity * item.reagent.per_unit
+    for key, item in reagents_book.items():
+        reagents_book[key] = round(item, 2)
+    return reagents_book, reagent_set
 
 
 def dataimport():

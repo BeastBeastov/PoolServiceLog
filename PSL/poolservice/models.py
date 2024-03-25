@@ -5,14 +5,6 @@ from django_matplotlib import MatplotlibFigureField
 
 from multiselectfield import MultiSelectField
 
-# WORK_CHOICES = (
-#     (1, 'Уборка бассейна ручным водным пылесосом'),
-#     (2, 'Промывка фильтра'),
-#     (3, 'Уборка бассейна роботом-пылесосом'),
-#     (4, 'Чистка стен щёткой'),
-#     (5, 'Долив свежей воды'),
-#     (6, 'Чистка ватерлинии'),
-# )
 WORK_CHOICES = (
     ('Уборка бассейна ручным водным пылесосом', 'Уборка бассейна ручным водным пылесосом'),
     ('Промывка фильтра', 'Промывка фильтра'),
@@ -21,6 +13,45 @@ WORK_CHOICES = (
     ('Долив свежей воды', 'Долив свежей воды'),
     ('Чистка ватерлинии', 'Чистка ватерлинии'),
 )
+
+UNITS_CHOICES=[
+    ('таб. по 200 гр.', 'таб. по 200 гр.'),
+    ('таб. по 20 гр.', 'таб. по 20 гр.'),
+    ('гр.', 'гр.'),
+    ('кг', 'кг'),
+    ('л', 'л'),
+    ('мл', 'мл'),
+]
+
+
+class ReagentName(models.Model):
+    class Meta:
+        verbose_name = 'Товарное наименование реагента'
+        verbose_name_plural = 'Каталог реагентов'
+
+    article = models.CharField(max_length=20, verbose_name='Артикул', blank=True)
+    title = models.CharField(max_length=255, verbose_name='Товарное наименование')
+    units = models.CharField(max_length=50, choices=UNITS_CHOICES, verbose_name='Единицы измерения')
+    per_unit = models.FloatField(max_length=5, verbose_name='Вес на единицу товара в кг')
+
+    def __str__(self):
+        return f'{self.title} в {self.units}'
+
+
+class Reagent(models.Model):
+    class Meta:
+        verbose_name = 'Реагенты добавленные во время сервиса'
+        verbose_name_plural = 'Добавленные реагенты'
+
+    reagent = models.ForeignKey(ReagentName, null=True, on_delete=models.PROTECT, verbose_name='Реагент')
+    quantity = models.FloatField(max_length=5, verbose_name='Количество')
+    poolservice= models.ForeignKey('PoolService', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.reagent.title} - {self.get_quantity()} {self.reagent.units}'
+
+    def get_quantity(self):
+        return int(self.quantity) if int(self.quantity) == self.quantity else self.quantity
 
 
 class Pool(models.Model):
@@ -34,14 +65,12 @@ class Pool(models.Model):
     year_create = models.CharField(max_length=10, verbose_name="Год постройки", blank=True)
     equipment = models.TextField(max_length=1000, verbose_name="Комплектация", blank=True)
     description = models.TextField(max_length=1000, verbose_name="Описание", blank=True)
-    photo = models.ImageField(upload_to="photos/%Y/%m/%d", default="photos/pool_default.jpg", verbose_name="Фото")
+    photo = models.ImageField(upload_to="photos/%Y/%m/%d", default="photos/pooldefault.png", verbose_name="Фото")
     author = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.PROTECT)
-
-    # figure = MatplotlibFigureField(figure='my_figure', silent=True, plt_kwargs={'pool': slug })
 
     class Meta:
         verbose_name = "Бассейн"
-        verbose_name_plural = "Бассейны"
+        verbose_name_plural = "Бассейны на обслуживании"
         ordering = ['title']
 
     def __str__(self):
@@ -62,7 +91,8 @@ class PoolService(models.Model):
     T = models.FloatField(max_length=4, verbose_name="Т°C", null=True, blank=True)
     water_cond = models.CharField(max_length=50, verbose_name="Состояние воды", blank=True)
     reagents = models.TextField(max_length=1000, verbose_name="Добавленные реагенты", blank=True)
-    works = MultiSelectField(choices=WORK_CHOICES, blank=True, max_choices=6, max_length=1000, verbose_name="Выполненные работы")
+    works = MultiSelectField(choices=WORK_CHOICES, blank=True, max_choices=6, max_length=1000, verbose_name="Сервисные работы")
+    fixworks = models.TextField(max_length=1000, verbose_name="Ремонтные работы", blank=True)
     comment = models.TextField(max_length=1000, verbose_name="Свободный комментарий", blank=True)
     is_published = models.BooleanField(default=True, verbose_name="Опубликовано")
     author = models.ForeignKey(User, default=0, verbose_name='Исполнитель', on_delete=models.PROTECT)
@@ -73,7 +103,7 @@ class PoolService(models.Model):
         ordering = ['-time_create', 'title']
 
     def __str__(self):
-        return self.title
+        return f'{self.title} - {self.time_create.date()}'
 
     def get_absolute_url(self):
         return reverse('log', kwargs={'pk':self.pk})
@@ -87,37 +117,5 @@ class PoolService(models.Model):
         return next
 
 
-
-"""
-class Reagent(models.Model):
-    title = models.CharField(max_length=255, verbose_name="Заголовок")
-    units = models.CharField(max_length=25, null=True, verbose_name="Единицы измерения", blank=True)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = "Реагент"
-        verbose_name_plural = "Реагенты"
-        ordering = ['title']
-"""
-
-
-class ServiceWork(models.Model):
-    # WORKS_CHOICES = (('1', 'Уборка ручным водным пылесосом'),
-    #                  ('2', 'Чистка ватерлинии'),
-    #                  ('3', 'Уборка роботом-пылесосом'),
-    #                  ('4', 'Промывка фильтра'),
-    #                  ('5', 'Чистка стен щеткой'),
-    #                  ('6', 'Долив свежей воды'))
-    title = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = "Сервисная операция"
-        verbose_name_plural = "Сервисные работы"
-        ordering = ['title']
 
 

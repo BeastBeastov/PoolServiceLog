@@ -6,6 +6,7 @@ from .views import *
 
 urlpatterns = [
     path('', main, name='main'),
+    path('', main, name='begin'),
     path('home/', PoolServiceView.as_view(), name='home'),
     path('admin/', admin_view, name='admin'),
     path('about/', about, name='about'),
@@ -22,10 +23,10 @@ urlpatterns = [
     path('logout/', logout_user, name='logout'),
     path('log/<int:pk>/', LogView.as_view(), name='log'),
     path('update/<int:log_id>/', update_log, name='update'),
-    # path('delete/<int:log_id>/', delete_log, name='delete'),
     path('delete/<int:pk>/', DeleteLogView.as_view(), name='delete'),
     path('pool_logs/<int:pool_id>/', PoolLogsView.as_view(), name='pool_logs'),
+    path('add_reagent_name/', CreateReagentNameView.as_view(), name='add_reagent_name'),
+    path('add_reagent_log/<int:pk>/', AddReagentView.as_view(), name='add_reagent_log'),
+    path('delete_reagent_log/<int:pk>/', delete_reagent_log, name='delete_reagent_log'),
 
-    #path('pages/<slug:page>/', pages),
-    #re_path(r'^archive/(?P<year>[0-9]{4})/', archive),
 ]

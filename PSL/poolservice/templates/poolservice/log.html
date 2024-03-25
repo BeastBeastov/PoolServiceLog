@@ -20,6 +20,7 @@
                 {% endif %}
                 {% if request.user == log.author  or request.user.is_superuser %}
                 <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill"><a href="{% url 'update' log.id %}" class="nav-link">Изменить</a></span>
+                <span class="badge bg-success-subtle text-success-emphasis rounded-pill"><a href="{% url 'add_reagent_log' log.id %}" class="nav-link">Реагенты</a></span>
                 <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill"><a href="{% url 'delete' log.id %}" class="nav-link">Удалить</a></span>
                 {% endif %}
     </p>
@@ -47,19 +48,29 @@
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Состояние воды:</span><br>
         <li>{{log.water_cond}}</li>
     {% endif %}
-    {% if log.reagents %}
+    {% if log.reagents and not rs %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Добавлены реагенты:</span><br>
         <li>{{log.reagents|linebreaksbr}}</li>
     {% endif %}
+    {% if rs %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Добавлены реагенты:</span><br>
+        {% for r in rs %}
+        <li>{{r}}</li>
+        {% endfor %}
+    {% endif %}
     {% if log.works %}
-        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Выполнены работы:</span><br>
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Сервисные работы:</span><br>
         {% for work in works %}
         <li>{{ work }}</li>
         {% endfor %}
     {% endif %}
+    {% if log.fixworks %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Ремонтные работы:</span><br>
+        <li>{{ log.fixworks|linebreaksbr }}</li>
+    {% endif %}
     {% if log.comment %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Комментарий:</span><br>
-        <li>{{log.comment|linebreaksbr}}</li>
+        <li>{{ log.comment|linebreaksbr }}</li>
     {% endif %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Изменено: {{log.date_update}}</span><br>
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Исполнитель:

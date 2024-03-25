@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    {% if request.user.is_authenticated %}
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img src="/media/images/notebook.svg" style="width: 40px; height: 40px;"> Журнал PH
+    </a>
+    {% else %}
+    <a class="navbar-brand" href="#">
+      <img src="/media/images/notebook.svg" style="width: 40px; height: 40px;"> Журнал PH
+    </a>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+    <a class="navbar-brand" href="{% url 'new_log' %}">
+      {% include 'poolservice/icons/add_service_icon.html' %}
+    </a>
+    <a class="navbar-brand" href="{% url 'new_pool' %}">
+      {% include 'poolservice/icons/add_pool_icon.html' %}
+    </a>
+    <a class="navbar-brand" href="{% url 'add_reagent_name' %}">
+      {% include 'poolservice/icons/add_reagent_icon.html' %}
+    </a>
+    {% endif %}
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        {% comment %}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'begin' %}">Начало</a>
+        </li>
+        {% endcomment %}
+
+        {% for m in menu %}
+          <!-- Элементы меню отображаются в цикле из переменной menu которая передается в context и загружается из utils -->
+        <li class="nav-item"><a class="nav-link" href="{% url m.url_name %}"> {{m.title}} </a></li>
+        {% endfor %}
+        {% if request.user.is_authenticated %}
+          <li class="nav-item"><a href="#" class="nav-link">{{user.username}}</a></li>
+          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Выйти</a></li>
+        {% else %}
+          <li class="nav-item"><a href="{% url 'register' %}" class="nav-link">Регистрация</a></li>
+          <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Войти</a></li>
+        {% endif %}
+
+        {% comment %}
+        <!-- Перенести эти ссылки в меню -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'new_log' %}">
+            {% include 'poolservice/icons/add_service_icon.html' %} Добавить сервис</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'new_pool' %}">
+              {% include 'poolservice/icons/add_pool_icon.html' %} Добавить объект</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'add_reagent_name' %}">
+            {% include 'poolservice/icons/add_reagent_icon.html' %} Добавить реагент</a>
+        </li>
+        {% endcomment %}
+
+      </ul>
+
+    </div>
+  </div>
+</nav>

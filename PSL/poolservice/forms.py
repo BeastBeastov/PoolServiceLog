@@ -26,7 +26,7 @@ class NewPoolLogForm(forms.ModelForm):
             self.fields['pool'].queryset = Pool.objects.filter(author=user)
             self.queryset = self.fields['pool'].queryset
 
-    works = forms.MultipleChoiceField(label='Выполненые работы', required=False,
+    works = forms.MultipleChoiceField(label='Сервисные работы', required=False,
                                       widget=forms.CheckboxSelectMultiple(
                                           attrs={'type':'checkbox'}
                                       ), choices=WORK_CHOICES)
@@ -57,14 +57,19 @@ class NewPoolLogForm(forms.ModelForm):
                                  widget=forms.Textarea(
                                      attrs={'class': 'form-control form-control-sm', 'rows':'3',
                                             'placeholder': 'например: Медленный стабилизированный хлор 1таблетка 200гр.'}))
+    fixworks = forms.CharField(label='Ремонтные работы', required=False,
+                              widget=forms.Textarea(
+                                  attrs={'class': 'form-control form-control-sm', 'rows': '3',
+                                         'placeholder': 'например: Устранили протечку в районе шарового крана'}))
     comment = forms.CharField(label='Свободный комментарий', required=False,
                                widget=forms.Textarea(
                                    attrs={'class': 'form-control form-control-sm', 'rows': '3',
-                                          'placeholder': 'например: Устранили протечку в районе шарового крана'}))
+                                          'placeholder': 'например: Сильный ветер насыпал листвы с деревьев'}))
+
 
     class Meta:
         model = PoolService
-        fields = ['title','pool','PH','RX','CL','T','water_cond','reagents','works','comment']
+        fields = ['title','pool','PH','RX','CL','T','water_cond','reagents','works','fixworks','comment']
 
 
 class NewPoolForm(DataMixinForm, forms.ModelForm):
@@ -89,6 +94,23 @@ class NewPoolForm(DataMixinForm, forms.ModelForm):
         model = Pool
         fields = ['title','slug','owner','email','phone','place','volume',
                   'year_create','equipment','description','photo']
+
+
+class ReagentNameForm(DataMixinForm, forms.ModelForm):
+    class Meta:
+        model = ReagentName
+        fields = '__all__'
+
+
+class ReagentForm(DataMixinForm, forms.ModelForm):
+    queryset = ReagentName.objects.all()
+    reagent = forms.ModelChoiceField(label='Добавить реагент', queryset=queryset,
+                                  widget=forms.Select())
+    quantity = forms.FloatField(label='Количество')
+
+    class Meta:
+        model = Reagent
+        fields = ['reagent','quantity']
 
 
 class RegisterUserForm(DataMixinForm, UserCreationForm):

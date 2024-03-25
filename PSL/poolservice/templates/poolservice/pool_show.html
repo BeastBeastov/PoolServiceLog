@@ -34,7 +34,6 @@
       }
     </script>
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
@@ -64,7 +63,6 @@
       }
     </script>
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
@@ -94,7 +92,6 @@
       }
     </script>
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
@@ -120,6 +117,29 @@
 
         var chart = new google.visualization.LineChart(document.getElementById('curve_chart4'));
 
+        chart.draw(data, options);
+      }
+    </script>
+
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+        ['Реагент', 'Количество'],
+        {% for key, item in reagents_book.items %}
+        ['{{key}}', {% get_dot item %}],
+        {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Соотношение реагентов',
+          pieHole: 0.3,
+          legend: 'in',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
         chart.draw(data, options);
       }
     </script>
@@ -181,7 +201,7 @@
 
  {% if logs %}
 <div class="container">
-    <h4>Таблица сервисных операций по бассейну <br>{{pool.title}}</h4>
+    <h4>Таблица сервисных операций c {{first_log_time|date}}<br></h4>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -205,7 +225,20 @@
             {% if show_rx %}<td>{% if l.RX %}{{ l.RX }}{% endif %}</td>{% endif %}
             {% if show_cl %}<td>{% if l.CL %}{{ l.CL }}{% endif %}</td>{% endif %}
             {% if show_t %}<td>{% if l.T %}{{ l.T }}{% endif %}</td>{% endif %}
+
+            {% if l.reagents and not rs_book %}
             <td><small>{{l.reagents|linebreaksbr}}</small></td>
+            {% endif %}
+            {% if rs_book %}
+                <td>
+                    {% for r in rs_book %}
+                    {% if r.poolservice == l %}
+                    <small>{{r}}</small><br>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+            {% endif %}
+
         </tr>
         {% endfor %}
         </tbody>
@@ -227,8 +260,17 @@
             <div id="curve_chart4" style="width: 100%, height: 300px;"></div>
         {% endif %}
     {% endif %}
-
-
-
 </div>
+{% if reagents_book %}
+<br>
+<div class="container">
+    <h4>Израсходованные реагенты за период c {{first_log_time|date}}</h4>
+    {% for key, item in reagents_book.items %}
+    <li>
+    {{key}} : {{item}} кг
+    </li>
+    {% endfor %}
+    <div align="center" id="donutchart" style="width: 100%; height: 500px;"></div>
+</div>
+{% endif %}
 {% endblock body %}

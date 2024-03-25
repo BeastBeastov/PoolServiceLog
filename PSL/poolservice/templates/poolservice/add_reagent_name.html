@@ -1,0 +1,29 @@
+{% extends 'poolservice/base.html' %}
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block body %}
+<div class="container" xmlns="http://www.w3.org/1999/html">
+    <h1>{{title}}</h1>
+    <form action="{% url 'add_reagent_name' %}" method="post">
+        <div class="container">
+        {% csrf_token %} <!-- передается специальный ключ для защиты формы от подделки -->
+        <div>{{form.non_field_errors}}</div>
+       <!-- {{ form.as_p }} as_p() - Метод класса Forms для отображения всех полей через -->
+            {% for f in form %}
+            <p>
+            <label  for="{{ f.id_for_label }}">{{f.label}}:</label>{{f}}
+            <div>{{f.errors}}</div>
+            </p>
+            {% endfor %}
+            <div class="container" align="right">
+                <button type="submit" class="btn btn-primary">Добавить</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock body %}
+
+{% block footermenu %}
+{% endblock footermenu %}

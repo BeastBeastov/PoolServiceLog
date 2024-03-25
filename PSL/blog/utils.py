@@ -6,7 +6,8 @@ TITLE_CHOICES = (
     ('D', 'Информационное сообщение'),
 )
 menu = [
-         {'title':'Главная', 'url_name':'home'},
+    {'title':'Главная', 'url_name':'home'},
+    {'title':'Добавить запись', 'url_name':'new_post'}
          ]
 
 

@@ -1,0 +1,71 @@
+{% extends 'poolservice/base.html' %}
+
+
+{% block js %}
+{% endblock js %}
+
+{% block title %}
+    {{title}} {{log.pool}} {{log.time_create}}
+{% endblock title %}
+
+{% block body %}
+<div class="container" align="center">
+    <br>
+    <p>
+        <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill"><a  href="{% url 'log' log.pk %}"  class="nav-link">Назад</a></span>
+    </p>
+</div>
+
+<h5> {{log.pool}}<br>{{log.time_create|date}}</h5>
+    {{log.title}}<br>
+    {% if log.PH %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Ph:</span>
+        <span class="badge bg-success-subtle text-success-emphasis rounded-pill">{{log.PH}}</span>
+    {% endif %}
+    {% if log.RX %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Redox:</span>
+        <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">{{log.RX}}</span>
+    {% endif %}
+    {% if log.CL %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Cl:</span>
+        <span class="badge bg-info-subtle text-info-emphasis rounded-pill">{{log.CL}}</span>
+    {% endif %}
+    {% if log.T %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Т°C:</span>
+        <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill">{{log.T}}</span>
+    {% endif %}<br>
+    {% if log.water_cond %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Состояние воды:</span><br>
+        <li>{{log.water_cond}}</li>
+    {% endif %}
+    {% if log.reagents %}
+        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Добавлены реагенты(старая версия):</span><br>
+        <li>{{log.reagents|linebreaksbr}}</li>
+    {% endif %}
+
+{% if rs %}
+<br>
+Добавленные реагенты: <br>
+
+{% for r in rs %}
+<div class="container">
+    <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill">
+        <a href="{% url 'delete_reagent_log' r.pk %}" class="nav-link">Удалить</a></span> {{r}}
+</div>
+{% endfor %}
+
+{% endif %}
+
+        <div class="row">
+                <form method="POST" enctype='multipart/form-data'>
+                    {% csrf_token %}
+
+                    Реагент: {{ form.reagent }} Количество: {{ form.quantity }}
+
+                    <input class="btn bg-success-subtle text-success-emphasis rounded-pill"
+                            style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .75rem;"
+                           type="submit" value="+Добавить">
+                </form>
+        </div>
+
+{% endblock body %}

@@ -16,8 +16,18 @@
             {% if l.PH %} Ph:<span class="badge bg-success-subtle text-success-emphasis rounded-pill">{{l.PH}}</span>{% endif %}
             {% if l.RX %} Redox:<span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">{{l.RX}}</span>{% endif %}
             {% if l.CL %} Cl:<span class="badge bg-info-subtle text-info-emphasis rounded-pill">{{l.CL}}</span>{% endif %}
-            {% if l.T %} Т°C:<span class="badge bg-danger-subtle text-danger-emphasis rounded-pill">{{l.T}}</span>{% endif %}
-            {% if l.reagents %}<li>Добавлены реагенты:<br>{{l.reagents}}</li>{% endif %}
+            {% if l.T %} Т°C:<span class="badge bg-danger-subtle text-danger-emphasis rounded-pill">{{l.T}}</span>{% endif %}<br>
+
+
+            {% if l.reagents %}
+            <small>{{l.reagents|linebreaksbr}}</small><br>
+            {% endif %}
+                {% for r in rs_book %}
+                    {% if r.poolservice == l %}
+                    <small>{{r}}</small><br>
+                    {% endif %}
+                {% endfor %}
+
 
     {% if request.user.is_authenticated %}
     <div class="container" align="center">
