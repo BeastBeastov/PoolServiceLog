@@ -179,7 +179,7 @@ def update_log(request, log_id):
         form = NewPoolLogForm(data=request.POST, instance=log, user=request.user)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('log', log_id)
         else:
             error = "Форма заполнена не верно"
     return render(request, 'poolservice/update.html', context=context)
@@ -289,7 +289,7 @@ def pool_update(request, pool_slug):
         form = NewPoolForm(data=request.POST, instance=pool, files=request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('pool_show', pool_slug)
         else:
             error = "Форма заполнена не верно"
     return render(request, 'poolservice/pool_update.html', context=context)
