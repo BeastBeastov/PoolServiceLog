@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.forms import model_to_dict
 from rest_framework import generics
 
@@ -249,18 +251,20 @@ class PoolView(DataMixin, DetailView):
     model = Pool
     template_name = 'poolservice/pool_show.html'
     slug_url_kwarg = 'pool_slug'
+    start_time = datetime(2024,1,1)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         queryset = PoolService.objects.filter(pool=context['pool'])
-        context['logs'] = queryset[:15]
+        context['logs'] = queryset.filter(time_create__gte=self.start_time)
         first = 0
         for log in context['logs']:
             first = log
         if first:
             context['first_log_time'] = first.time_create
-        context['reagents_book'] = reagent_statistics(context['logs'])[0]
-        context['rs_book'] = reagent_statistics(context['logs'])[1]
+        if context['logs']:
+            context['reagents_book'] = reagent_statistics(context['logs'])[0]
+            context['rs_book'] = reagent_statistics(context['logs'])[1]
         total = queryset.count()
         ph_count = queryset.filter(PH__gte=5).count()
         rx_count = queryset.filter(RX__gte=300).count()
