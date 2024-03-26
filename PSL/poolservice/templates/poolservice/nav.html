@@ -33,33 +33,20 @@
         </li>
         {% endcomment %}
 
+
+
         {% for m in menu %}
           <!-- Элементы меню отображаются в цикле из переменной menu которая передается в context и загружается из utils -->
         <li class="nav-item"><a class="nav-link" href="{% url m.url_name %}"> {{m.title}} </a></li>
         {% endfor %}
-        {% if request.user.is_authenticated %}
-          <li class="nav-item"><a href="#" class="nav-link">{{user.username}}</a></li>
-          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Выйти</a></li>
-        {% else %}
-          <li class="nav-item"><a href="{% url 'register' %}" class="nav-link">Регистрация</a></li>
-          <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Войти</a></li>
-        {% endif %}
 
-        {% comment %}
-        <!-- Перенести эти ссылки в меню -->
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'new_log' %}">
-            {% include 'poolservice/icons/add_service_icon.html' %} Добавить сервис</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'new_pool' %}">
-              {% include 'poolservice/icons/add_pool_icon.html' %} Добавить объект</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'add_reagent_name' %}">
-            {% include 'poolservice/icons/add_reagent_icon.html' %} Добавить реагент</a>
-        </li>
-        {% endcomment %}
+        {% if request.user.is_authenticated %}
+          <li class="nav-item"><a href="#" class="nav-link active">{{user.username}}</a></li>
+          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link active">Выйти</a></li>
+        {% else %}
+          <li class="nav-item"><a href="{% url 'register' %}" class="nav-link active">Регистрация</a></li>
+          <li class="nav-item"><a href="{% url 'login' %}" class="nav-link active">Войти</a></li>
+        {% endif %}
 
       </ul>
 

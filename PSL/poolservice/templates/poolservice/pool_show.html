@@ -294,7 +294,7 @@
 <div class="row">
     <form action="{% url 'pool_show' pool.slug %}">
 <div class="input-group">
-    <label class="input-group-text" for="inputGroupSelect01">Отобразить записи начиная с даты:</label>
+    <label class="input-group-text" for="inputGroupSelect01">Отобразить записи начиная с даты </label>
   <select class="form-select" id="inputGroupSelect01" name="start_date" aria-label="">
     <option selected>Выбрать дату</option>
       {% for date in date_book %}
@@ -307,5 +307,30 @@
 </div>
 </div>
 {% endif %}
+
+<div class="container">
+    <h4>Выгрузка данных журнала в формате .xlsx<br></h4>
+<div class="row">
+    <form action="{% url 'export_to_excel' pool.slug %}">
+<div class="input-group">
+    <label class="input-group-text" for="inputGroupSelect02">Выгрузить данные с </label>
+  <select class="form-select" id="inputGroupSelect02" name="start_load_date" aria-label="">
+    <option selected>Выбрать дату</option>
+      {% for date in date_book %}
+      <option value="{{date|date:'Y-m-j'}}" name="start_load_date">{{date|date}}</option>
+      {% endfor %}
+  </select>
+    <label class="input-group-text" for="inputGroupSelect03"> по </label>
+  <select class="form-select" id="inputGroupSelect03" name="end_load_date" aria-label="">
+    <option selected>Выбрать дату</option>
+      {% for date in date_book %}
+      <option value="{{date|date:'Y-m-j'}}" name="end_load_date">{{date|date}}</option>
+      {% endfor %}
+  </select>
+  <button class="btn btn-primary"  type="submit">Выгрузить</button>
+</div>
+     </form>
+</div>
+</div>
 
 {% endblock body %}

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.forms import model_to_dict
+from openpyxl.workbook import Workbook
 from rest_framework import generics
 
 from django.contrib.auth import logout, login
@@ -452,6 +453,56 @@ def about(request):
         'title': 'О сайте',
     }
     return render(request,'poolservice/about.html', context=context)
+
+
+def export_to_excel(request, pool_slug):
+    pool = Pool.objects.get(slug=pool_slug)
+    start_load_date = request.GET.get('start_load_date')
+    end_load_date = request.GET.get('end_load_date')
+
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="poolservice_oreder.xlsx"'
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Журнал сервисных операций"
+
+    # Добавляем заголовки столбцов
+    start = start_load_date
+    end = end_load_date
+    description = ["Журнал сервисных операций по объекту: " + pool.title + " с " + start + " по " + end]
+    headers = ["Дата", "Заголовок", "Состояние воды", "Ph", "Redox", "Cl", "T",
+               "Добавленные реагенты", "Сервисные работы", "Ремонтные работы", "Свободный комментарий"]
+    ws.append(description)
+    ws.append(headers)
+
+
+    # Выбираем данные из модели
+    logs = PoolService.objects.filter(pool=pool.pk)
+    logs = logs.filter(time_create__gte=start_load_date)
+    logs = logs.filter(time_create__lte=end_load_date)
+    for l in logs:
+        reagents = Reagent.objects.filter(poolservice=l)
+        r_list = ''
+        if l.PH == None: l.PH = ''
+        if l.RX == None: l.RX = ''
+        if l.CL == None: l.CL = ''
+        if l.T == None: l.T = ''
+        w_list = ''
+        if l.works:
+            for w in l.works:
+                w_list += w + ' \n'
+        if l.reagents:
+            r_list += l.reagents +' \n'
+        if reagents:
+            for r in reagents:
+                if r.quantity == int(r.quantity): r.quantity=int(r.quantity)
+                r_list += r.reagent.title + ' ' + str(r.quantity) + ' ' + r.reagent.units + ' \n'
+        ws.append([l.time_create.date(), l.title, l.water_cond, str(l.PH), str(l.RX), str(l.CL), str(l.T),
+                   r_list, w_list, l.fixworks, l.comment])
+        # Save the workbook to the HttpResponse
+    wb.save(response)
+    return response
 
 
 def pages(request, page):

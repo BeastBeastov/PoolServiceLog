@@ -28,5 +28,6 @@ urlpatterns = [
     path('add_reagent_name/', CreateReagentNameView.as_view(), name='add_reagent_name'),
     path('add_reagent_log/<int:pk>/', AddReagentView.as_view(), name='add_reagent_log'),
     path('delete_reagent_log/<int:pk>/', delete_reagent_log, name='delete_reagent_log'),
+    path('export/<slug:pool_slug>/', export_to_excel, name='export_to_excel'),
 
 ]
