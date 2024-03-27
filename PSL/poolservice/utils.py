@@ -12,9 +12,9 @@ menu = [
          ]
 
 appmenu = [
-         {'title':'Добавить сервис', 'url_name':'new_log'},
-         {'title':'Новый бассейн', 'url_name':'new_pool'},
-         {'title':'Новый реагент', 'url_name':'add_reagent_name'},
+         {'title':'Добавить сервис', 'url_icon':'poolservice/icons/add_service_icon.html' ,'url_name':'new_log'},
+         {'title':'Новый бассейн', 'url_icon':'poolservice/icons/add_pool_icon.html', 'url_name':'new_pool'},
+         {'title':'Новый реагент', 'url_icon':'poolservice/icons/add_reagent_icon.html', 'url_name':'add_reagent_name'},
          ]
 
 

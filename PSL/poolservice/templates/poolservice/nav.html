@@ -37,7 +37,7 @@
 
         {% for m in menu %}
           <!-- Элементы меню отображаются в цикле из переменной menu которая передается в context и загружается из utils -->
-        <li class="nav-item"><a class="nav-link" href="{% url m.url_name %}"> {{m.title}} </a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url m.url_name %}">{{m.title}} </a></li>
         {% endfor %}
 
         {% if request.user.is_authenticated %}
