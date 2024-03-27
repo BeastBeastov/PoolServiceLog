@@ -106,7 +106,7 @@ class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
         context = {
             'form': form,
             'menu': menu+appmenu,  # предполагается, что переменная menu определена
-            'title': 'Добавить новую запись в журнал',
+            'title': 'Журнал PH - Новая запись',
         }
         return render(request, 'poolservice/new_log.html', context=context)
 
@@ -115,12 +115,12 @@ class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
         if form.is_valid():
             form.instance.author = request.user
             form.save()
-            return redirect('home')
+            return redirect('log', form.instance.pk)
         else:
             context = {
                 'form': form,
                 'menu': menu+appmenu,
-                'title': 'Добавить новую запись в журнал',
+                'title': 'Журнал PH - Новая запись',
             }
             return render(request, 'poolservice/new_log.html', context=context)
 
