@@ -204,7 +204,7 @@
 <div class="row">
     <form action="{% url 'pool_show' pool.slug %}">
 <div class="input-group">
-    <label class="input-group-text" for="inputGroupSelect04">Отобразить записи начиная с даты:</label>
+    <label class="input-group-text" for="inputGroupSelect04">Отобразить записи журнала начиная с </label>
   <select class="form-select" id="inputGroupSelect04" name="start_date" aria-label="">
     <option selected>Выбрать дату</option>
       {% for date in date_book %}
@@ -231,8 +231,7 @@
         {% for l in logs %}
         <tr>
             <td>
-                <a class="nav-link" href="{% url 'log' pk=l.pk%}">🔍{% if l.works %} 🛠️ {% endif %}
-                    {% if l.comment %}💬{% endif %}</a>
+                <a class="nav-link" href="{% url 'log' pk=l.pk%}">🔍{% if l.works %}🛠️{% endif %}{% if l.comment %}💬{% endif %}</a>
                 <small>{{l.time_create|date:"jMy"}}</small>
             </td>
             {% if show_ph %}<td>{% if l.PH %}{{ l.PH }}{% endif %}</td>{% endif %}
@@ -294,7 +293,7 @@
 <div class="row">
     <form action="{% url 'pool_show' pool.slug %}">
 <div class="input-group">
-    <label class="input-group-text" for="inputGroupSelect01">Отобразить записи начиная с даты </label>
+    <label class="input-group-text" for="inputGroupSelect01">Отобразить записи журнала начиная с </label>
   <select class="form-select" id="inputGroupSelect01" name="start_date" aria-label="">
     <option selected>Выбрать дату</option>
       {% for date in date_book %}
@@ -313,7 +312,7 @@
 <div class="row">
     <form action="{% url 'export_to_excel' pool.slug %}">
 <div class="input-group">
-    <label class="input-group-text" for="inputGroupSelect02">Выгрузить данные с </label>
+    <label class="input-group-text" for="inputGroupSelect02">Выгрузить табличные данные журнала с </label>
   <select class="form-select" id="inputGroupSelect02" name="start_load_date" aria-label="">
     <option selected>Выбрать дату</option>
       {% for date in date_book %}
