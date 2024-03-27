@@ -79,6 +79,7 @@
               <small class="d-block mb-3 text-body-secondary">© www.poolskeeper.ru 2024</small>
           </a>
       </div>
+
 {% block footermenu %}
       <div class="col-7 col-md">
         <h5>Мои бассейны</h5>
@@ -88,16 +89,6 @@
             {% endfor %}
         </ul>
       </div>
-        {% comment %}
-      <div class="col-7 col-md">
-        <h5>Reagents</h5>
-        <ul class="list-unstyled text-small">
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Все реагенты</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Добавить реагент</a></li>
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Рекомендации</a></li>
-        </ul>
-      </div>
-        {% endcomment %}
       <div class="col-7 col-md">
         <h5>About</h5>
         <ul class="list-unstyled text-small">
@@ -105,12 +96,12 @@
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'blog' %}">Разработка</a></li>
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'contact' %}">Обратная связь</a></li>
          {% if request.user.is_staff %}
-          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">User agreement</a></li>
           <li class="mb-1"><a class="link-secondary text-decoration-none" href="{% url 'admin' %}">Админ</a></li>
          {% endif %}
         </ul>
       </div>
 {% endblock footermenu %}
+
     </div>
   </footer>
 </body>
