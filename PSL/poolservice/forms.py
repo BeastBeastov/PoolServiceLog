@@ -56,7 +56,7 @@ class NewPoolLogForm(forms.ModelForm):
     reagents = forms.CharField(label='Добавленные реагенты', required=False,
                                  widget=forms.Textarea(
                                      attrs={'class': 'form-control form-control-sm', 'rows':'3',
-                                            'placeholder': 'например: Медленный стабилизированный хлор 1таблетка 200гр.'}))
+                                            'placeholder': 'Данные в этом поле не попадают в статистику. \nДля добавления реагентов восползутейсь кнопкой "Реагенты" на странице подробного описания сервисной записи'}))
     fixworks = forms.CharField(label='Ремонтные работы', required=False,
                               widget=forms.Textarea(
                                   attrs={'class': 'form-control form-control-sm', 'rows': '3',

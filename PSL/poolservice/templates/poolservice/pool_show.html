@@ -231,9 +231,9 @@
         {% for l in logs %}
         <tr>
             <td>
-                <a class="nav-link" href="{% url 'log' pk=l.pk%}">🔍 {% if l.works %} 🛠️ {% endif %}
-                    {% if l.comment %}💬 {% endif %}</a>
-                <small>{{ l.time_create|date:"jMY"}}</small>
+                <a class="nav-link" href="{% url 'log' pk=l.pk%}">🔍{% if l.works %} 🛠️ {% endif %}
+                    {% if l.comment %}💬{% endif %}</a>
+                <small>{{l.time_create|date:"jMy"}}</small>
             </td>
             {% if show_ph %}<td>{% if l.PH %}{{ l.PH }}{% endif %}</td>{% endif %}
             {% if show_rx %}<td>{% if l.RX %}{{ l.RX }}{% endif %}</td>{% endif %}
