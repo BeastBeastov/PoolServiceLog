@@ -55,8 +55,8 @@ class NewPoolLogForm(forms.ModelForm):
                             attrs={'class': 'form-control form-control-sm', 'placeholder': 'например: Чистая, прозрачная' }))
     reagents = forms.CharField(label='Добавленные реагенты', required=False,
                                  widget=forms.Textarea(
-                                     attrs={'class': 'form-control form-control-sm', 'rows':'3',
-                                            'placeholder': 'Данные в этом поле не попадают в статистику. \nДля добавления реагентов восползутейсь кнопкой "Реагенты" на странице подробного описания сервисной записи'}))
+                                     attrs={'class': 'form-control form-control-sm', 'rows':'4',
+                                            'placeholder': 'Эти данные не попадут в статистику.\nДля добавления реагентов восползутейсь кнопкой "Реагенты" на странице подробного описания сервисной записи.'}))
     fixworks = forms.CharField(label='Ремонтные работы', required=False,
                               widget=forms.Textarea(
                                   attrs={'class': 'form-control form-control-sm', 'rows': '3',
@@ -65,7 +65,6 @@ class NewPoolLogForm(forms.ModelForm):
                                widget=forms.Textarea(
                                    attrs={'class': 'form-control form-control-sm', 'rows': '3',
                                           'placeholder': 'например: Сильный ветер насыпал листвы с деревьев'}))
-
 
     class Meta:
         model = PoolService
