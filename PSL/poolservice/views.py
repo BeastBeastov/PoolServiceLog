@@ -49,7 +49,7 @@ class PoolServiceView(LoginRequiredMixin, DataMixin, ListView):
         context['queryset'] = self.get_queryset()
         context['menu'] = menu
         context['rs_book'] = reagent_statistics(context['logs'])[1]
-        c_def = self.get_user_context(title='Главная страница')
+        c_def = self.get_user_context(title='Журнал PH - Главная страница')
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
@@ -98,7 +98,7 @@ class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Новая запись')
+        c_def = self.get_user_context(title='Журнал PH - Новая запись')
         return dict(list(context.items()) + list(c_def.items()))
 
     def get(self, request):
@@ -133,7 +133,7 @@ class NewPoolView(LoginRequiredMixin, DataMixin, CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Новый бассейн')
+        c_def = self.get_user_context(title='Журнал PH - Новый бассейн')
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
@@ -175,7 +175,7 @@ def update_log(request, log_id):
         'appmenu': appmenu,
         'form': form,
         'log': log,
-        'title': 'Изменить ' + str(log.title) + ' ' + str(log.pool) + ' ' + str(log.time_create.date()),
+        'title': 'Журнал PH - Изменить ' + str(log.title) + ' ' + str(log.pool) + ' ' + str(log.time_create.date()),
         'menu': menu,
     }
     if request.method == "POST":
@@ -196,7 +196,7 @@ class DeleteLogView(LoginRequiredMixin, DeleteView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Удаление'
+        context['title'] = 'Журнал PH - Удаление записи'
         context['pk_url_kwarg'] = 'pk'
         return context
 
@@ -212,9 +212,9 @@ class PoolLogsView(LoginRequiredMixin, DataMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['queryset'] = self.get_queryset()
         context['rs_book'] = reagent_statistics(context['logs'])[1]
-        context['title'] = 'Сервис ' + str(context['logs'][0].pool)
+        context['title'] = 'Журнал PH - Сервис ' + str(context['logs'][0].pool)
         context['pool_selected'] = context['logs'][0].pool_id
-        c_def = self.get_user_context(title='Сервис ' + str(context['logs'][0].pool))
+        c_def = self.get_user_context(title='Журнал PH - Сервис ' + str(context['logs'][0].pool))
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
@@ -260,7 +260,7 @@ class PoolView(DataMixin, DetailView):
         context = {
             'pool': pool,
             'menu': menu+appmenu,
-            'title': pool.title
+            'title': 'Журнал PH - ' + pool.title
         }
         if request.GET.get('start_date'):
             self.start_date = request.GET.get('start_date')
@@ -326,7 +326,7 @@ def pool_update(request, pool_slug):
         'appmenu': appmenu,
         'form': form,
         'log': pool,
-        'title': 'Изменить ' + str(pool.title),
+        'title': 'Журнал PH - Изменить ' + str(pool.title),
         'menu': menu,
     }
     if request.method == "POST":
@@ -347,7 +347,7 @@ class DeletePoolView(DeleteView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Удаление'
+        context['title'] = 'Журнал PH - Удаление объекта'
         context['pk_url_kwarg'] = 'pk'
         return context
 
@@ -359,7 +359,7 @@ class ContactFormView(DataMixin, FormView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Обратная связь')
+        c_def = self.get_user_context(title='Журнал PH - Обратная связь')
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
@@ -373,7 +373,7 @@ class CreateReagentNameView(DataMixin, CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Новый реагент')
+        c_def = self.get_user_context(title='Журнал PH - Новый реагент')
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
@@ -388,7 +388,7 @@ class AddReagentView(DataMixin, CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Добавить реагент'
+        context['title'] = 'Журнал PH - Добавить реагент'
         return context
 
     def get(self, request, pk):
@@ -400,7 +400,7 @@ class AddReagentView(DataMixin, CreateView):
             'pk': pk,
             'form': form,
             'menu': menu,
-            'title': 'Добавить реагент',
+            'title': 'Журнал PH - Добавить реагент',
         }
         return render(request, 'poolservice/add_reagent_log.html', context=context)
 
@@ -419,7 +419,7 @@ class AddReagentView(DataMixin, CreateView):
                 'rs': Reagent.objects.filter(poolservice=pk),
                 'form': form,
                 'menu': menu,
-                'title': 'Добавить реагент',
+                'title': 'Журнал PH - Добавить реагент',
             }
             return render(request, 'poolservice/add_reagent_log.html', context=context)
 
@@ -437,14 +437,14 @@ def admin_view(request):
 def development(request):
     context = {
         'menu': menu,
-        'title': 'Разработка PoolService',
+        'title': 'Журнал PH - Блог Разработка',
     }
     return render(request, 'poolservice/development.html', context=context)
 
 
 def main(request):
     context = {
-        'title': 'Начало',
+        'title': 'Журнал PH',
     }
     return render(request, 'poolservice/main.html', context=context)
 
@@ -452,7 +452,7 @@ def main(request):
 def about(request):
     context = {
         'menu': menu,
-        'title': 'О сайте',
+        'title': 'О проекте "Журнал PH"',
     }
     return render(request,'poolservice/about.html', context=context)
 
