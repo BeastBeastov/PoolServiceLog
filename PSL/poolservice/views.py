@@ -172,11 +172,10 @@ def update_log(request, log_id):
     log = PoolService.objects.get(pk=log_id)
     form = NewPoolLogForm(instance=log, user=request.user)
     context = {
-        'appmenu': appmenu,
         'form': form,
         'log': log,
         'title': 'Журнал PH - Изменить ' + str(log.title) + ' ' + str(log.pool) + ' ' + str(log.time_create.date()),
-        'menu': menu,
+        'menu': menu + appmenu,
     }
     if request.method == "POST":
         form = NewPoolLogForm(data=request.POST, instance=log, user=request.user)
@@ -323,11 +322,10 @@ def pool_update(request, pool_slug):
     form = NewPoolForm(instance=pool)
 
     context = {
-        'appmenu': appmenu,
         'form': form,
         'log': pool,
         'title': 'Журнал PH - Изменить ' + str(pool.title),
-        'menu': menu,
+        'menu': menu+appmenu,
     }
     if request.method == "POST":
         form = NewPoolForm(data=request.POST, instance=pool, files=request.FILES)
@@ -399,7 +397,7 @@ class AddReagentView(DataMixin, CreateView):
             'rs': Reagent.objects.filter(poolservice=pk),
             'pk': pk,
             'form': form,
-            'menu': menu,
+            'menu': menu+appmenu,
             'title': 'Журнал PH - Добавить реагент',
         }
         return render(request, 'poolservice/add_reagent_log.html', context=context)
@@ -418,7 +416,7 @@ class AddReagentView(DataMixin, CreateView):
                 'log': PoolService.objects.get(pk=pk),
                 'rs': Reagent.objects.filter(poolservice=pk),
                 'form': form,
-                'menu': menu,
+                'menu': menu+appmenu,
                 'title': 'Журнал PH - Добавить реагент',
             }
             return render(request, 'poolservice/add_reagent_log.html', context=context)
@@ -434,14 +432,6 @@ def admin_view(request):
     return redirect('admin')
 
 
-def development(request):
-    context = {
-        'menu': menu,
-        'title': 'Журнал PH - Блог Разработка',
-    }
-    return render(request, 'poolservice/development.html', context=context)
-
-
 def main(request):
     context = {
         'title': 'Журнал PH',
@@ -451,7 +441,7 @@ def main(request):
 
 def about(request):
     context = {
-        'menu': menu,
+        'menu': menu+appmenu,
         'title': 'О проекте "Журнал PH"',
     }
     return render(request,'poolservice/about.html', context=context)
