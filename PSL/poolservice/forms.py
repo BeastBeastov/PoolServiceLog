@@ -98,12 +98,13 @@ class NewPoolForm(DataMixinForm, forms.ModelForm):
 class ReagentNameForm(DataMixinForm, forms.ModelForm):
     class Meta:
         model = ReagentName
-        fields = '__all__'
+        fields = ['article', 'title', 'units', 'per_unit']
 
 
 class ReagentForm(DataMixinForm, forms.ModelForm):
+
     queryset = ReagentName.objects.all()
-    reagent = forms.ModelChoiceField(label='Добавить реагент', queryset=queryset,
+    reagent = forms.ModelChoiceField(label='Добавить реагент', empty_label='Выберите наименование реагента', queryset=queryset,
                                   widget=forms.Select())
     quantity = forms.FloatField(label='Количество')
 

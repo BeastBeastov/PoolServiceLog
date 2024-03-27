@@ -17,10 +17,12 @@ WORK_CHOICES = (
 UNITS_CHOICES=[
     ('таб. по 200 гр.', 'таб. по 200 гр.'),
     ('таб. по 20 гр.', 'таб. по 20 гр.'),
-    ('гр.', 'гр.'),
+    ('таб. по 250 гр.', 'таб. по 250 гр.'),
+    ('гр', 'гр'),
     ('кг', 'кг'),
     ('л', 'л'),
     ('мл', 'мл'),
+    ('картридж', 'картридж')
 ]
 
 
@@ -45,7 +47,7 @@ class Reagent(models.Model):
 
     reagent = models.ForeignKey(ReagentName, null=True, on_delete=models.PROTECT, verbose_name='Реагент')
     quantity = models.FloatField(max_length=5, verbose_name='Количество')
-    poolservice= models.ForeignKey('PoolService', on_delete=models.CASCADE)
+    poolservice = models.ForeignKey('PoolService', on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.reagent.title} - {self.get_quantity()} {self.reagent.units}'
