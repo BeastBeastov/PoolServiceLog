@@ -43,20 +43,22 @@
     {% if log.T %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Т°C:</span>
         <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill">{{log.T}}</span>
-    {% endif %}<br>
+    {% endif %}
+    {% if log.PH or log.RX or log.CL or log.T %}<br>{% endif %}
     {% if log.water_cond %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Состояние воды:</span><br>
         <li>{{log.water_cond}}</li>
     {% endif %}
-    {% if log.reagents and not rs %}
+    {% if log.reagents or rs %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Добавлены реагенты:</span><br>
-        <li>{{log.reagents|linebreaksbr}}</li>
-    {% endif %}
-    {% if rs %}
-        <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Добавлены реагенты:</span><br>
-        {% for r in rs %}
-        <li>{{r}}</li>
-        {% endfor %}
+        {% if log.ragents %}
+            <li>{{log.reagents|linebreaksbr}}</li>
+        {% endif %}
+        {% if rs %}
+            {% for r in rs %}
+            <li>{{r}}</li>
+            {% endfor %}
+        {% endif %}
     {% endif %}
     {% if log.works %}
         <span class="badge bg-light-subtle text-light-emphasis rounded-pill">Сервисные работы:</span><br>
