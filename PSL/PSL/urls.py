@@ -33,6 +33,7 @@ urlpatterns = [
     path('', include('blog.urls')),
     path('', include('poolservice.urls')),
     path('api/v1/poolservicelist/', PoolServiceAPIView.as_view()),
+    path("__debug__/", include("debug_toolbar.urls")),
 ] + static_urls(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

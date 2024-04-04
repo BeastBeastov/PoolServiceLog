@@ -48,7 +48,8 @@ class PoolServiceView(LoginRequiredMixin, DataMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['queryset'] = self.get_queryset()
         context['menu'] = menu
-        context['rs_book'] = reagent_statistics(context['logs'])[1]
+        if context['logs']:
+            context['rs_book'] = reagent_statistics(context['logs'])[1]
         c_def = self.get_user_context(title='Журнал PH - Главная страница')
         return dict(list(context.items()) + list(c_def.items()))
 

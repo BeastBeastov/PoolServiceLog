@@ -55,7 +55,7 @@ def reagent_statistics(queryset):
     reagent_set = Reagent.objects.none()
     reagents_book = dict()
     for log in queryset:
-        reagent_set|=Reagent.objects.filter(poolservice=log.pk)
+        reagent_set|=Reagent.objects.filter(poolservice=log.pk).select_related('reagent')
     for item in reagent_set:
         reagents_book[item.reagent.title] =  reagents_book.pop(item.reagent.title, 0) + item.quantity * item.reagent.per_unit
     for key, item in reagents_book.items():

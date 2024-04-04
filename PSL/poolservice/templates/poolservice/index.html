@@ -7,6 +7,9 @@
 
 
 {% block body %}
+    {% if not logs %}
+    <span class="fs-5"> Записей нет </span>
+    {% else %}
     {% for l in logs %}
         <span class="fs-5"><a href="{{l.pool.get_absolute_url}}"
                               class="d-flex align-items-center link-body-emphasis text-decoration-none">{{l.pool}}</a></span>
@@ -35,5 +38,6 @@
     </div>
     {% endif %}
     {% endfor%}
+    {% endif %}
 <br>
 {% endblock body %}
