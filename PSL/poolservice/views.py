@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.forms import model_to_dict
 from openpyxl.workbook import Workbook
@@ -253,7 +253,7 @@ class PoolView(DataMixin, DetailView):
     template_name = 'poolservice/pool_show.html'
     slug_url_kwarg = 'pool_slug'
     current_year = datetime.now().year
-    start_date = datetime(current_year,1,1)
+    start_date = datetime(current_year,1,1) + timedelta(hours=3)
 
     def get(self, request, pool_slug):
         pool = Pool.objects.get(slug=pool_slug)
@@ -265,57 +265,29 @@ class PoolView(DataMixin, DetailView):
         if request.GET.get('start_date'):
             self.start_date = request.GET.get('start_date')
         queryset = PoolService.objects.filter(pool=pool.pk)
+        queryset = queryset.filter(time_create__gte=self.start_date)
         date_book = list()
         for log in queryset:
             date_book.append(log.time_create)
         context['date_book'] = date_book
-        context['logs'] = queryset.filter(time_create__gte=self.start_date)
+        context['logs'] = queryset
         first = 0
-        for log in context['logs']:
+        for log in queryset:
             first = log
         if first:
             context['first_log_time'] = first.time_create
-        if context['logs']:
-            context['reagents_book'] = reagent_statistics(context['logs'])[0]
-            context['rs_book'] = reagent_statistics(context['logs'])[1]
+        if queryset:
+            context['reagents_book'], context['rs_book'] = reagent_statistics(queryset)
         total = queryset.count()
         ph_count = queryset.filter(PH__gte=5).count()
         rx_count = queryset.filter(RX__gte=300).count()
         cl_count = queryset.filter(CL__gte=0.05).count()
-        t_count = queryset.filter(T__gte=10).count()
+        t_count = queryset.filter(T__gte=5).count()
         if ph_count >= total / 2: context['show_ph'] = True
         if rx_count >= total / 2: context['show_rx'] = True
         if cl_count >= total / 2: context['show_cl'] = True
         if t_count >= total / 2: context['show_t'] = True
         return render(request, 'poolservice/pool_show.html'.format(self.start_date), context=context)
-
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     queryset = PoolService.objects.filter(pool=context['pool'])
-    #     date_book = list()
-    #     for log in queryset:
-    #         date_book.append(log.time_create.date())
-    #     context['date_book'] = date_book
-    #     context['logs'] = queryset.filter(time_create__gte=self.start_date)
-    #     first = 0
-    #     for log in context['logs']:
-    #         first = log
-    #     if first:
-    #         context['first_log_time'] = first.time_create
-    #     if context['logs']:
-    #         context['reagents_book'] = reagent_statistics(context['logs'])[0]
-    #         context['rs_book'] = reagent_statistics(context['logs'])[1]
-    #     total = queryset.count()
-    #     ph_count = queryset.filter(PH__gte=5).count()
-    #     rx_count = queryset.filter(RX__gte=300).count()
-    #     cl_count = queryset.filter(CL__gte=0.05).count()
-    #     t_count = queryset.filter(T__gte=10).count()
-    #     if ph_count >= total / 2: context['show_ph'] = True
-    #     if rx_count >= total / 2: context['show_rx'] = True
-    #     if cl_count >= total / 2: context['show_cl'] = True
-    #     if t_count >= total / 2: context['show_t'] = True
-    #     c_def = self.get_user_context(title='Бассейн ' + str(context['pool']))
-    #     return dict(list(context.items()) + list(c_def.items()))
 
 
 def pool_update(request, pool_slug):
@@ -382,7 +354,7 @@ class CreateReagentNameView(DataMixin, CreateView):
 
 class AddReagentView(DataMixin, CreateView):
     model = ReagentForm
-    template_name = 'googlecharts/add_reagent_log.html'
+    template_name = 'poolservice/add_reagent_log.html'
     current_pk = None
 
     def get_context_data(self, *, object_list=None, **kwargs):

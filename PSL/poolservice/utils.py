@@ -51,13 +51,14 @@ class DataMixinForm:
 
 
 def reagent_statistics(queryset):
-    if not queryset: return None
+    if not queryset:
+        return None
     reagent_set = Reagent.objects.none()
     reagents_book = dict()
     for log in queryset:
-        reagent_set|=Reagent.objects.filter(poolservice=log.pk).select_related('reagent')
+        reagent_set |= Reagent.objects.filter(poolservice=log.pk).select_related('reagent')
     for item in reagent_set:
-        reagents_book[item.reagent.title] =  reagents_book.pop(item.reagent.title, 0) + item.quantity * item.reagent.per_unit
+        reagents_book[item.reagent.title] = reagents_book.pop(item.reagent.title, 0) + item.quantity * item.reagent.per_unit
     for key, item in reagents_book.items():
         reagents_book[key] = round(item, 2)
     return reagents_book, reagent_set
@@ -87,7 +88,6 @@ def dataimport():
                 S[i] = float(L)
         S = pd.Series(np.array(S))
         return S
-
 
     def up_data(file):
         df = pd.read_excel(file)
