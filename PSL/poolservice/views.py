@@ -270,11 +270,11 @@ class PoolView(DataMixin, DetailView):
             first = log
         if first:
             context['first_log_time'] = first.time_create
-        queryset = queryset.filter(time_create__gte=self.start_date)
         date_book = list()
         for log in queryset:
             date_book.append(log.time_create)
         context['date_book'] = date_book
+        queryset = queryset.filter(time_create__gte=self.start_date)
         context['logs'] = queryset
         if queryset:
             context['reagents_book'], context['rs_book'] = reagent_statistics(queryset)
