@@ -265,17 +265,17 @@ class PoolView(DataMixin, DetailView):
         if request.GET.get('start_date'):
             self.start_date = request.GET.get('start_date')
         queryset = PoolService.objects.filter(pool=pool.pk)
+        first = 0
+        for log in queryset:
+            first = log
+        if first:
+            context['first_log_time'] = first.time_create
         queryset = queryset.filter(time_create__gte=self.start_date)
         date_book = list()
         for log in queryset:
             date_book.append(log.time_create)
         context['date_book'] = date_book
         context['logs'] = queryset
-        first = 0
-        for log in queryset:
-            first = log
-        if first:
-            context['first_log_time'] = first.time_create
         if queryset:
             context['reagents_book'], context['rs_book'] = reagent_statistics(queryset)
         total = queryset.count()
