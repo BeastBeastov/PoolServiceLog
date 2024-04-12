@@ -29,6 +29,7 @@ from poolservice.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
+    path('users/', include('users.urls', namespace='users')),
     path('captcha/', include('captcha.urls')),
     path('', include('blog.urls')),
     path('', include('poolservice.urls')),
@@ -40,3 +41,6 @@ if settings.DEBUG:
      urlpatterns += static_urls(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = pageNotFound # Обработчик будет работать только если в settings.py Debug = False
+
+# admin.site.site_header = "Панель администрирования Эксперименты"
+# admin.site.index_title = "Эксперименты Django"

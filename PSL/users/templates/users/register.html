@@ -1,0 +1,20 @@
+{% extends 'poolservice/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block body %}
+<h1>{{title}}</h1>
+
+<form action="" method="post">
+    {% csrf_token%}
+    <input type="hidden" name="next" value="{{ next }}"/>
+    {% comment %}
+    # Эта строка(выше) запоминает страницу с которой была направлена на регистрацию, чтобы потом на неё вернуться
+    {% endcomment %}
+    {{ form|crispy }}
+    <p><button type="submit" class="btn btn-primary">Регистрация</button></p>
+</form>
+{% endblock %}

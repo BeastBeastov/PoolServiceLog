@@ -41,11 +41,11 @@
         {% endfor %}
 
         {% if request.user.is_authenticated %}
-          <li class="nav-item"><a href="#" class="nav-link active">{{user.username}}</a></li>
-          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link active">Выйти</a></li>
+          <li class="nav-item"><a href="{% url 'users:profile' %}" class="nav-link active">{{user.username}}</a></li>
+          <li class="nav-item"><a href="{% url 'users:logout' %}" class="nav-link active">Выйти</a></li>
         {% else %}
-          <li class="nav-item"><a href="{% url 'register' %}" class="nav-link active">Регистрация</a></li>
-          <li class="nav-item"><a href="{% url 'login' %}" class="nav-link active">Войти</a></li>
+          <li class="nav-item"><a href="{% url 'users:register' %}" class="nav-link active">Регистрация</a></li>
+          <li class="nav-item"><a href="{% url 'users:login' %}" class="nav-link active">Войти</a></li>
         {% endif %}
 
       </ul>

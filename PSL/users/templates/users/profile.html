@@ -1,0 +1,27 @@
+{% extends 'poolservice/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block body %}
+<h1>{{title}}</h1>
+
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token%}
+    {% if user.photo %}
+    <p><img src="{{ user.photo.url }}"></p>
+    {% else %}
+    <p><img src="{{ default_image }}"></p>
+    {% comment %}
+    <p><img src="/media/users/default_profile.jpeg"></p>
+    {% endcomment %}
+    {% endif %}
+
+    {{ form|crispy }}
+    <p><button type="submit" class="btn btn-primary">Сохранить</button></p>
+</form>
+<hr>
+<p><a href="{% url 'users:password_change' %}">Изменить пароль</a></p>
+{% endblock %}

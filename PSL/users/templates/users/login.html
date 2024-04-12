@@ -1,0 +1,17 @@
+{% extends 'poolservice/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block body %}
+<h1>{{title}}</h1>
+
+<form action="" method="post">
+    {% csrf_token%}
+    {{ form|crispy }}
+    <p><button type="submit" class="btn btn-primary">Войти</button></p>
+</form>
+<p><a href="{% url 'users:password_reset' %}">Забыли пароль?</a></p>
+{% endblock %}

@@ -26,15 +26,15 @@
                   </div>
                     <br>
                   <div align="center">
-                      <h6 class="nav-item"><a href="{% url 'logout' %}" class="nav-link"> Выйти </a></h6>
+                      <h6 class="nav-item"><a href="{% url 'users:logout' %}" class="nav-link"> Выйти </a></h6>
                   </div>
             {% else %}
                   <div align="center">
-                        <h6 class="nav-item"><a href="{% url 'register' %}" class="nav-link"> Регистрация </a></h6>
+                        <h6 class="nav-item"><a href="{% url 'users:register' %}" class="nav-link"> Регистрация </a></h6>
                   </div>
                     <br>
                   <div align="center">
-                      <h6 class="nav-item"><a href="{% url 'login'%}" class="nav-link"> Войти </a></h6>
+                      <h6 class="nav-item"><a href="{% url 'users:login'%}" class="nav-link"> Войти </a></h6>
                   </div>
             {% endif %}
         </div>
