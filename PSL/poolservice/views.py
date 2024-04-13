@@ -143,29 +143,42 @@ class NewPoolView(LoginRequiredMixin, DataMixin, CreateView):
         form.save()
         return super().form_valid(form)
 
-
-class RegisterUser(DataMixin, CreateView):
-    form_class = RegisterUserForm
-    template_name = 'poolservice/register.html'
-    success_url = reverse_lazy('login')
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect('home')
-
-
-class LoginUser(DataMixin, LoginView):
-    form_class = LoginUserForm
-    template_name = 'poolservice/login.html'
-
-    def get_success_url(self):
-        return reverse_lazy('home')
+    def get(self, request):
+        form = NewPoolForm(initial={
+            'owner':self.request.user.first_name + ' ' + self.request.user.last_name,
+            'email':self.request.user.email
+        })
+        context = {
+            'form': form,
+            'menu': menu+appmenu,
+            'title': 'Журнал PH - Новый бассейн',
+        }
+        return render(request, 'poolservice/new_pool.html', context=context)
 
 
-def logout_user(request):
-    logout(request)
-    return redirect('login')
+
+# class RegisterUser(DataMixin, CreateView):
+#     form_class = RegisterUserForm
+#     template_name = 'poolservice/register.html'
+#     success_url = reverse_lazy('login')
+#
+#     def form_valid(self, form):
+#         user = form.save()
+#         login(self.request, user)
+#         return redirect('home')
+#
+#
+# class LoginUser(DataMixin, LoginView):
+#     form_class = LoginUserForm
+#     template_name = 'poolservice/login.html'
+#
+#     def get_success_url(self):
+#         return reverse_lazy('home')
+#
+#
+# def logout_user(request):
+#     logout(request)
+#     return redirect('login')
 
 
 @login_required

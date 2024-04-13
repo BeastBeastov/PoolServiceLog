@@ -7,9 +7,15 @@
 
 
 {% block body %}
-    {% if not logs %}
-    <span class="fs-5"> Записей нет </span>
-    {% else %}
+{% if not logs %}
+<p><span class="fs-5"> Журнал пуст, записей нет... </span></p>
+<p> Для заполнения журнала необходимо создать объект обслуживания
+    <a href="{% url 'new_pool' %}">{% include 'poolservice/icons/add_pool_icon.html' %} Новый бассейн</a></p>
+<p>Когда ваш бассейн будет записан в базе проекта, вы сможете добавить
+    <a href="{% url 'new_log' %}">{% include 'poolservice/icons/add_service_icon.html' %} Новую запись</a> в журнал</p>
+<p>Если в списке выбора реагентов нет того который вы используете в вашем басеейне добавьте
+    <a href="{% url 'add_reagent_name' %}">{% include 'poolservice/icons/add_reagent_icon.html' %} Новый реагент</a></p>
+{% else %}
     {% for l in logs %}
         <span class="fs-5"><a href="{{l.pool.get_absolute_url}}"
                               class="d-flex align-items-center link-body-emphasis text-decoration-none">{{l.pool}}</a></span>

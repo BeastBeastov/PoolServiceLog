@@ -1,9 +1,10 @@
+from PIL import Image
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-from django_matplotlib import MatplotlibFigureField
 
 from multiselectfield import MultiSelectField
+from modules.services.utils import unique_slugify
 
 WORK_CHOICES = (
     ('Уборка бассейна ручным водным пылесосом', 'Уборка бассейна ручным водным пылесосом'),
@@ -77,6 +78,22 @@ class Pool(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        """
+        Сохранение полей модели при их отсутствии заполнения
+        """
+        if not self.slug:
+            self.slug = unique_slugify(self, self.title)
+        super().save(*args, **kwargs)
+        """
+        Изменение размера фото перед сохранением
+        """
+        img = Image.open(self.photo.path)
+        if img.height > 300 or img.width >300:
+            output_size = (300,300)
+            img.thumbnail(output_size)
+            img.save(self.photo.path)
 
     def get_absolute_url(self):
         return reverse('pool_show', kwargs={'pool_slug':self.slug})

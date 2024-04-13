@@ -81,6 +81,7 @@
       </div>
 
 {% block footermenu %}
+        {% if user_pools %}
       <div class="col-7 col-md">
         <h5>Мои бассейны</h5>
         <ul class="list-unstyled text-small">
@@ -89,6 +90,7 @@
             {% endfor %}
         </ul>
       </div>
+        {% endif %}
       <div class="col-7 col-md">
         <h5>About</h5>
         <ul class="list-unstyled text-small">

@@ -12,6 +12,7 @@ class PoolServiceAdmin(admin.ModelAdmin):
     list_filter = ['is_published','title','pool','time_create']
 
 
+@admin.register(Pool)
 class PoolAdmin(admin.ModelAdmin):
     list_display = ['id','title','volume','phone','get_html_photo']
     list_display_links = ['id','title']
@@ -27,5 +28,5 @@ class PoolAdmin(admin.ModelAdmin):
 
 admin.site.register(Reagent)
 admin.site.register(ReagentName)
-admin.site.register(Pool, PoolAdmin)
+# admin.site.register(Pool, PoolAdmin)
 admin.site.register(PoolService, PoolServiceAdmin)

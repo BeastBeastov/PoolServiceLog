@@ -74,8 +74,8 @@ class NewPoolLogForm(forms.ModelForm):
 class NewPoolForm(DataMixinForm, forms.ModelForm):
     title = forms.CharField(label='Название объекта',
                                widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Малиновка 11х5.5м'}))
-    slug = forms.SlugField(label='URL',
-                               widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'malinovka-11x5_5m'}))
+    # slug = forms.SlugField(label='URL',
+    #                            widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'malinovka-11x5_5m'}))
     place = forms.CharField(label='Место расположения', required=False,
                                widget=forms.Textarea(
                                    attrs={'class': 'form-control form-control-sm', 'rows': '3',
@@ -91,7 +91,7 @@ class NewPoolForm(DataMixinForm, forms.ModelForm):
 
     class Meta:
         model = Pool
-        fields = ['title','slug','owner','email','phone','place','volume',
+        fields = ['title','owner','email','phone','place','volume',
                   'year_create','equipment','description','photo']
 
 
