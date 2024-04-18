@@ -1,15 +1,9 @@
 from datetime import datetime, timedelta
 
-from django.forms import model_to_dict
 from openpyxl.workbook import Workbook
-from rest_framework import generics
 
-from django.contrib.auth import logout, login
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -17,23 +11,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .forms import *
-from .models import *
 from .serializers import PoolServiceSerializer
 from .utils import *
-
-
-# Функция предстваления страницы index, аналогично классу представленному ниже
-# def index(request):
-#     logs = PoolService.objects.all().order_by('-date_create')
-#     pools = Pool.objects.all()
-#     context = {
-#         'logs': logs,
-#         'pools': pools,
-#         'menu': menu,
-#         'pool_selected': 0,
-#         'title': 'Главная страница',
-#     }
-#     return render(request,'poolservice/index.html', context=context)
 
 
 class PoolServiceView(LoginRequiredMixin, DataMixin, ListView):
@@ -69,26 +48,6 @@ class PoolServiceView(LoginRequiredMixin, DataMixin, ListView):
 
 class FormValidationError:
     pass
-
-
-# def new_log(request):
-#     if request.method == 'POST':
-#         form = NewPoolLogForm(data=request.POST, user=request.user)
-#         try:
-#             form.instance.author = request.user
-#             print(form.is_valid())
-#             form.save()
-#             return redirect('home')
-#         except FormValidationError as e:
-#             form.add_error("Ошибка: {}".format(e))
-#     else:
-#         form = NewPoolLogForm(request.user)
-#     context = {
-#         'form': form,
-#         'menu': menu,
-#         'title': 'Добавить новую запись в журнал',
-#     }
-#     return render(request, 'poolservice/new_log.html', context=context)
 
 
 class NewLogView(LoginRequiredMixin, DataMixin, CreateView):
@@ -154,31 +113,6 @@ class NewPoolView(LoginRequiredMixin, DataMixin, CreateView):
             'title': 'Журнал PH - Новый бассейн',
         }
         return render(request, 'poolservice/new_pool.html', context=context)
-
-
-
-# class RegisterUser(DataMixin, CreateView):
-#     form_class = RegisterUserForm
-#     template_name = 'poolservice/register.html'
-#     success_url = reverse_lazy('login')
-#
-#     def form_valid(self, form):
-#         user = form.save()
-#         login(self.request, user)
-#         return redirect('home')
-#
-#
-# class LoginUser(DataMixin, LoginView):
-#     form_class = LoginUserForm
-#     template_name = 'poolservice/login.html'
-#
-#     def get_success_url(self):
-#         return reverse_lazy('home')
-#
-#
-# def logout_user(request):
-#     logout(request)
-#     return redirect('login')
 
 
 @login_required
@@ -247,18 +181,6 @@ class LogView(LoginRequiredMixin, DataMixin, DetailView):
         context['rs'] = Reagent.objects.filter(poolservice=context['log'])
         c_def = self.get_user_context(title=str(context['log'].title))
         return dict(list(context.items()) + list(c_def.items()))
-
-
-# Функция представления для примера, аналогичная нижеописанному классу представления
-# def pool_show(request, pool_slug):
-#     pool = get_object_or_404(Pool, slug=pool_slug)
-#
-#     context = {
-#         'title': pool.title,
-#         'menu': menu,
-#         'pool': pool,
-#     }
-#     return render(request, 'poolservice/pool_show.html', context=context)
 
 
 class PoolView(DataMixin, DetailView):
@@ -482,18 +404,6 @@ def export_to_excel(request, pool_slug):
     return response
 
 
-def pages(request, page):
-    return HttpResponse(f"<h1>Вывод по страницам</h1><p>{page}</p>")
-
-
-def archive(request, year):
-    if int(year) > 2024:
-        raise Http404()
-    elif int(year) < 1950:
-        return redirect('home', permanent=True)
-    return HttpResponse(f"<h1>Вывод по годам</h1><p>{year}</p>")
-
-
 def pageNotFound(request, exception):
     return HttpResponseNotFound(f"<h1>Страница не найдена</h1>")
 
@@ -508,17 +418,4 @@ class PoolServiceAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'log': serializer.data})
-        # log_new = PoolService.objects.create(
-        #     title=request.data['title'],
-        #     pool_id=0,
-        #     PH=request.data['PH'],
-        #     RX=request.data['RX'],
-        #     CL=request.data['CL'],
-        #     T=request.data['T'],
-        #     author_id=0
-        # )
-        # return Response({'log': PoolServiceSerializer(log_new).data})
 
-# class PoolServiceAPIView(generics.ListAPIView):
-#     queryset = PoolService.objects.all()
-#     serializer_class = PoolServiceSerializer

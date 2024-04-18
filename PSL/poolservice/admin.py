@@ -28,5 +28,4 @@ class PoolAdmin(admin.ModelAdmin):
 
 admin.site.register(Reagent)
 admin.site.register(ReagentName)
-# admin.site.register(Pool, PoolAdmin)
 admin.site.register(PoolService, PoolServiceAdmin)
