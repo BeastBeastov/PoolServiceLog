@@ -17,12 +17,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.template.defaulttags import url
-from django.urls import path, include
-
+from django.urls import path, include, re_path
 
 from django.views.generic.base import RedirectView
 from django.templatetags.static import static
 from django.conf.urls.static import static as static_urls
+
+from django.conf import settings
+from django.views.static import serve
 
 from PSL import settings
 from poolservice.views import *
@@ -35,7 +37,9 @@ urlpatterns = [
     path('', include('poolservice.urls')),
     path('api/v1/poolservicelist/', PoolServiceAPIView.as_view()),
     path("__debug__/", include("debug_toolbar.urls")),
-] + static_urls(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+]
 
 if settings.DEBUG:
      urlpatterns += static_urls(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
