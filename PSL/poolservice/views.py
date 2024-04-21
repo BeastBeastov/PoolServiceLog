@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time, date
 
 from openpyxl.workbook import Workbook
 
@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from pytz import timezone
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -359,6 +360,9 @@ def export_to_excel(request, pool_slug):
     pool = Pool.objects.get(slug=pool_slug)
     start_load_date = request.GET.get('start_load_date')
     end_load_date = request.GET.get('end_load_date')
+    end_date = datetime.strptime(end_load_date, "%Y-%m-%d")
+    end_time = time(23, 59)
+    end_time = datetime.combine(end_date, end_time)
 
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="poolservice_oreder.xlsx"'
@@ -379,7 +383,7 @@ def export_to_excel(request, pool_slug):
     # Выбираем данные из модели
     logs = PoolService.objects.filter(pool=pool.pk)
     logs = logs.filter(time_create__gte=start_load_date)
-    logs = logs.filter(time_create__lte=end_load_date)
+    logs = logs.filter(time_create__lte=end_time)
     for l in logs:
         reagents = Reagent.objects.filter(poolservice=l)
         r_list = ''
