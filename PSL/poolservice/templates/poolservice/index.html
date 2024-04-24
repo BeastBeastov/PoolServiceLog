@@ -19,7 +19,8 @@
     {% for l in logs %}
         <span class="fs-5"><a href="{{l.pool.get_absolute_url}}"
                               class="d-flex align-items-center link-body-emphasis text-decoration-none">{{l.pool}}</a></span>
-            <span>{{l.time_create|date}} {{l.title}}</span><br>
+            <span>{% if l.pk == l.pool.services.first.pk %}<small style="color:red"><i>{{ l.delta_date }}</i></small><br>{% endif %}</span>
+            <span>{{l.time_create|date}} {{l.title}}</span> <br>
             {% if l.water_cond %}<span>{{l.water_cond.capitalize}}</span><br>{% endif %}
             {% if l.PH %} Ph:<span class="badge bg-success-subtle text-success-emphasis rounded-pill">{{l.PH}}</span>{% endif %}
             {% if l.RX %} Redox:<span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">{{l.RX}}</span>{% endif %}
