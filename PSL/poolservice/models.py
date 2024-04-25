@@ -156,12 +156,13 @@ class PoolService(models.Model):
             w = 'недели'
         else:
             w = 'недель'
-        if days == 0:
-            result = f' ~ {weeks} {w}'
-        elif weeks == 0 and days == 0:
-            result = 'пусто'
-        elif weeks == 0:
+
+        if weeks < 1 and days < 1:
+            result = ' ~ Сегодня'
+        elif weeks < 1:
             result = f' ~ {days} {d}'
+        elif days < 1:
+            result = f' ~ {weeks} {w}'
         else:
             result = f' ~ {weeks} {w} {days} {d}'
         return result
