@@ -4,6 +4,7 @@ from PIL import Image
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 from multiselectfield import MultiSelectField
 from modules.services.utils import unique_slugify
@@ -104,7 +105,7 @@ class Pool(models.Model):
 class PoolService(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     pool = models.ForeignKey('Pool', default=0, on_delete=models.PROTECT, related_name="services", verbose_name="Бассейн")
-    time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+    time_create = models.DateTimeField(verbose_name="Время создания")
     date_update = models.DateField(auto_now=True, verbose_name="Дата изменения")
     PH = models.FloatField(max_length=4, verbose_name="Ph", null=True, blank=True)
     RX = models.IntegerField(verbose_name="Rx", null=True, blank=True)
@@ -136,6 +137,11 @@ class PoolService(models.Model):
     def get_next(self):
         next = PoolService.objects.filter(time_create__gt=self.time_create).order_by('-time_create').last()
         return next
+
+    def save(self, *args, **kwargs):
+        if self.time_create is None:
+            self.time_create = timezone.now() + timezone.timedelta(hours=3)
+        super().save(*args, **kwargs)
 
     def delta_date(self):
         delta = (datetime.today().date() - self.time_create.date()).days
