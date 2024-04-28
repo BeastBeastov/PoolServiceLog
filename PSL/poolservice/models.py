@@ -105,7 +105,7 @@ class Pool(models.Model):
 class PoolService(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     pool = models.ForeignKey('Pool', default=0, on_delete=models.PROTECT, related_name="services", verbose_name="Бассейн")
-    time_create = models.DateTimeField(verbose_name="Время создания")
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     date_update = models.DateField(auto_now=True, verbose_name="Дата изменения")
     PH = models.FloatField(max_length=4, verbose_name="Ph", null=True, blank=True)
     RX = models.IntegerField(verbose_name="Rx", null=True, blank=True)
