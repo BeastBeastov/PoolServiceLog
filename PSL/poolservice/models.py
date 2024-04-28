@@ -138,10 +138,10 @@ class PoolService(models.Model):
         next = PoolService.objects.filter(time_create__gt=self.time_create).order_by('-time_create').last()
         return next
 
-    def save(self, *args, **kwargs):
-        if self.time_create is None:
-            self.time_create = timezone.now() + timezone.timedelta(hours=3)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.time_create is None:
+    #         self.time_create = timezone.now() + timezone.timedelta(hours=3)
+    #     super().save(*args, **kwargs)
 
     def delta_date(self):
         delta = (datetime.today().date() - self.time_create.date()).days
