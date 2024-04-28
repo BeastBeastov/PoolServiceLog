@@ -139,8 +139,8 @@ class PoolService(models.Model):
         return next
 
     def save(self, *args, **kwargs):
-        if not self.time_create:
-                self.time_create = timezone.now()
+        if self.time_create is None:
+            self.time_create = timezone.now() + timezone.timedelta(hours=3)
         super().save(*args, **kwargs)
 
     def delta_date(self):
