@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'rest_framework',
     'multiselectfield',
-    'django_matplotlib',
     'captcha',
     'debug_toolbar',
     'crispy_forms',
