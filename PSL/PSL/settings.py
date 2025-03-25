@@ -80,6 +80,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'PSL.wsgi.application'
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://109.225.40.22:2004',  # Ваш внешний IP и порт
+    'https://109.225.40.22:2004',
+    'http://192.168.0.16:2004',
+    'https://192.168.0.16:2004',
+]
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
