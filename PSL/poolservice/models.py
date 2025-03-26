@@ -1,7 +1,10 @@
+import datetime
+
 from PIL import Image
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 from multiselectfield import MultiSelectField
 from modules.services.utils import unique_slugify
@@ -101,7 +104,7 @@ class Pool(models.Model):
 
 class PoolService(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
-    pool = models.ForeignKey('Pool', default=0, on_delete=models.PROTECT, verbose_name="Бассейн")
+    pool = models.ForeignKey('Pool', default=0, on_delete=models.PROTECT, related_name="services", verbose_name="Бассейн")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     date_update = models.DateField(auto_now=True, verbose_name="Дата изменения")
     PH = models.FloatField(max_length=4, verbose_name="Ph", null=True, blank=True)
@@ -124,6 +127,11 @@ class PoolService(models.Model):
     def __str__(self):
         return f'{self.title} - {self.time_create.date()}'
 
+    def save(self, *args, **kwargs):
+        if self.time_create is None:
+            self.time_create = timezone.now() + timezone.timedelta(hours=3)
+        super().save(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse('log', kwargs={'pk':self.pk})
 
@@ -134,6 +142,36 @@ class PoolService(models.Model):
     def get_next(self):
         next = PoolService.objects.filter(time_create__gt=self.time_create).order_by('-time_create').last()
         return next
+
+    def delta_date(self):
+        delta = (timezone.now().date() - self.time_create.date()).days
+        weeks = delta // 7
+        days = delta % 7
+        if days == 1:
+            d = 'день'
+        elif days > 1 and days < 5:
+            d = 'дня'
+        elif days > 4:
+            d = 'дней'
+
+        if weeks > 10 and weeks < 20:
+            w = 'недель'
+        elif weeks % 10 == 1:
+            w = 'неделя'
+        elif weeks % 10 > 1 and weeks % 10 < 5:
+            w = 'недели'
+        else:
+            w = 'недель'
+
+        if weeks < 1 and days < 1:
+            result = ' ~ Сегодня'
+        elif weeks < 1:
+            result = f' ~ {days} {d}'
+        elif days < 1:
+            result = f' ~ {weeks} {w}'
+        else:
+            result = f' ~ {weeks} {w} {days} {d}'
+        return result
 
 
 

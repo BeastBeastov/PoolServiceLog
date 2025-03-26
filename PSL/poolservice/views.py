@@ -265,8 +265,7 @@ class PoolView(DataMixin, DetailView):
     model = Pool
     template_name = 'poolservice/pool_show.html'
     slug_url_kwarg = 'pool_slug'
-    current_year = datetime.now().year
-    start_date = datetime(current_year,1,1) + timedelta(hours=3)
+    start_date = timezone.make_aware(datetime.datetime(timezone.now().year, 1, 1))
 
     def get(self, request, pool_slug):
         pool = Pool.objects.get(slug=pool_slug)
